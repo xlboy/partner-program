@@ -4,7 +4,7 @@
  *
  *
  */
-import Environment from 'configs/environments'
+import Environment from "configs/environments";
 
 module.exports = {
   type: Environment.DB_TYPE,
@@ -13,6 +13,9 @@ module.exports = {
   username: Environment.DB_USERNAME,
   password: Environment.DB_PASSWORD,
   database: Environment.DB_DATABASE,
+  cache: {
+    duration: 30000,
+  },
   useNewUrlParser: true,
   useUnifiedTopology: true,
-}
+};

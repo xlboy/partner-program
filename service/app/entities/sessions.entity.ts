@@ -1,23 +1,12 @@
 import { MinLength, IsNotEmpty } from 'class-validator'
+import BaseEntity from './common/base.entity';
 import {
   Entity,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
   Column,
 } from 'typeorm'
 
-/**
- * All validator can be applied to all controllers.
- * Reference document: https://github.com/typestack/class-validator
- * How to auto validaing? see: https://github.com/typestack/routing-controllers#auto-validating-action-params
- */
-
 @Entity('sessions')
-export default class Session {
-  @PrimaryGeneratedColumn()
-  id?: string
-
+export default class Session extends BaseEntity {
   @MinLength(4, { message: 'username too short' })
   @IsNotEmpty({ message: 'must include username' })
   @Column()
@@ -29,10 +18,5 @@ export default class Session {
 
   @Column()
   test: string
-
-  @CreateDateColumn()
-  createdAt?: Date
-
-  @UpdateDateColumn()
-  updatedAt?: Date
 }
+
