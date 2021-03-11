@@ -19,6 +19,7 @@ interface PlanInfoObj {
   completeStatus: CompleteStatus
 }
 
+
 @Entity('plan_info')
 export default class PlanInfo extends BaseEntity {
   @Column()
