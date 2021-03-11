@@ -1,4 +1,4 @@
-import { CompleteStatus } from 'app/@types/planInfo.type'
+import { PlanInfoObj } from 'app/@types/planInfo.type'
 import { MinLength, IsNotEmpty } from 'class-validator'
 import {
   Entity,
@@ -8,17 +8,6 @@ import {
 import BaseEntity from './common/base.entity'
 import PlanGroup from './planGroup.entity'
 import Userinfo from './userinfo.entity'
-
-
-
-interface PlanInfoObj {
-  startTime: number;
-  endTime: number;
-  isRemind: boolean;
-  content: string;
-  completeStatus: CompleteStatus
-}
-
 
 @Entity('plan_info')
 export default class PlanInfo extends BaseEntity {
@@ -31,7 +20,7 @@ export default class PlanInfo extends BaseEntity {
   @Column()
   dayTime: number;
 
-  @Column("simple-array")
+  @Column('simple-array')
   onDayAllPlans: PlanInfoObj[];
 
   @ManyToOne(() => Userinfo, userinfo => userinfo.planInfo)

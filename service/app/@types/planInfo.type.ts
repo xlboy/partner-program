@@ -4,3 +4,11 @@ export enum CompleteStatus {
   COMPLETE = 'COMPLETE',
   NOT_COMPLETE = 'NOT_COMPLETE'
 }
+
+export interface PlanInfoObj {
+  startTime: number;
+  endTime: number;
+  isRemind: boolean;
+  content: string;
+  completeStatus: CompleteStatus
+}
