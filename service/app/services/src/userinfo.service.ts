@@ -33,6 +33,16 @@ export class UserinfoService {
     } catch (error) {
       return statusFormat.error({ msg: error, code: StatusCode.DATA_WRONG })
     }
-    
+
+  }
+
+  async login(userinfo: { username: string, password: string }) {
+    const { username, password } = userinfo
+    const findResult = await this.repository.find({ username, password })
+    if (findResult.length > 0) {
+      return statusFormat.success({ msg: '登陆成功' })
+    } else {
+      return statusFormat.success({ msg: '账号或密码有误' })
+    }
   }
 }

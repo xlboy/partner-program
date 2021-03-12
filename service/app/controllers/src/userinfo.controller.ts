@@ -1,7 +1,7 @@
 import Userinfo from 'app/entities/userinfo.entity'
 import statusFormat from 'app/helpers/statusFormat'
 import { UserinfoService } from 'app/services'
-import { Get, JsonController, QueryParams } from 'routing-controllers'
+import { Get, JsonController, QueryParam, QueryParams } from 'routing-controllers'
 import { Inject } from 'typedi'
 
 @JsonController()
@@ -12,7 +12,14 @@ export class UserinfoController {
 
   @Get('/user/reg')
   async reg(@QueryParams() user: Userinfo): Promise<any> {
-    const result = await this.userinfoService.create(user)
-    return result
+    return await this.userinfoService.create(user)
+  }
+
+  @Get('/user/login')
+  async login(
+    @QueryParam('username') username: string,
+    @QueryParam('password') password: string
+  ): Promise<any> {
+    return await this.userinfoService.login({ username, password })
   }
 }
