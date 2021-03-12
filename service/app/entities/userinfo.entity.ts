@@ -1,4 +1,4 @@
-import { MinLength, IsNotEmpty } from 'class-validator'
+import { MinLength, IsNotEmpty, MaxLength } from 'class-validator'
 import {
   Entity,
   ManyToMany,
@@ -11,25 +11,26 @@ import PlanInfo from './planInfo.entity'
 
 @Entity('userinfo')
 export default class Userinfo extends BaseEntity {
-  @MinLength(4, { message: '滚' })
-  @IsNotEmpty({ message: 'username不允许为空哦' })
+  @IsNotEmpty({ message: '用户名不可为空' })
   @Column()
   username: string
 
+  @IsNotEmpty({ message: '密码不可为空' })
   @Column()
   password: string
 
-  @Column()
-  email: string
+  @Column({ nullable: true })
+  email?: string
 
+  @IsNotEmpty({ message: '昵称不可为空' })
   @Column()
   nickname: string
 
-  @Column()
-  age: number;
+  @Column({ nullable: true })
+  age?: number;
 
-  @Column()
-  sex: boolean;
+  @Column({ nullable: true })
+  sex?: boolean;
 
   @OneToMany(() => PlanInfo, planInfo => planInfo.userinfo)
   planInfo: PlanInfo[];

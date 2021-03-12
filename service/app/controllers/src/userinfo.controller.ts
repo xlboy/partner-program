@@ -1,20 +1,18 @@
 import Userinfo from 'app/entities/userinfo.entity'
+import statusFormat from 'app/helpers/statusFormat'
 import { UserinfoService } from 'app/services'
-import { Get, JsonController, QueryParam } from 'routing-controllers'
+import { Get, JsonController, QueryParams } from 'routing-controllers'
 import { Inject } from 'typedi'
 
 @JsonController()
 export class UserinfoController {
   @Inject()
   userinfoService: UserinfoService
-  constructor() {}
+  constructor() { }
 
   @Get('/user/reg')
-  async reg(): Promise<any> {
-    console.log('来注册啦')
-    const userinfo = new Userinfo()
-    userinfo.username = '111'
-    const result = await this.userinfoService.create(userinfo)
+  async reg(@QueryParams() user: Userinfo): Promise<any> {
+    const result = await this.userinfoService.create(user)
     return result
   }
 }

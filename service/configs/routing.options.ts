@@ -9,11 +9,11 @@ export const routingConfigs: RoutingControllersOptions = {
 
   middlewares: dictToArray(middlewares),
 
-  interceptors: dictToArray(interceptors),
+  // interceptors: dictToArray(interceptors), // 全局拦截器
 
   // router prefix
   // e.g. api => http://hostname:port/{routePrefix}/{controller.method}
-  routePrefix: '/apis',
+  routePrefix: '/api',
 
   // auto validate entity item
   // learn more: https://github.com/typestack/class-validator

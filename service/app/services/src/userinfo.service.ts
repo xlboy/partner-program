@@ -1,7 +1,8 @@
 import { getRepository, MongoRepository, Repository } from 'typeorm'
-import { validate } from 'class-validator'
 import { Service } from 'typedi'
 import Userinfo from 'app/entities/userinfo.entity'
+import validateEntity from 'app/helpers/validateEntity'
+import statusFormat, { StatusCode } from 'app/helpers/statusFormat';
 
 @Service()
 export class UserinfoService {
@@ -12,13 +13,26 @@ export class UserinfoService {
   }
 
   async create(userinfo: Userinfo) {
-    validate(userinfo).then(errors => {
-      if (errors.length > 0) {
-        console.error('errors', errors[0].constraints)
+
+    const verifUserRepeat = async (username: string): Promise<boolean> => {
+      const findResult = await this.repository.find({ username })
+      return findResult.length > 0
+    }
+
+    try {
+      await validateEntity(userinfo)
+      const isRepeat = await verifUserRepeat(userinfo.username)
+
+      if (isRepeat) {
+        return statusFormat.error({ msg: '用户名已存在', code: StatusCode.DATA_REPEAT })
       } else {
-        console.log('正确了哦')
+        await this.repository.save(userinfo)
+        return statusFormat.success({ msg: '创建成功' })
       }
-    })
-    // return await this.repository.save(userinfo)
+
+    } catch (error) {
+      return statusFormat.error({ msg: error, code: StatusCode.DATA_WRONG })
+    }
+    
   }
 }
