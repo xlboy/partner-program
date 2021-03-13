@@ -9,7 +9,7 @@ module.exports = (async (): Promise<Server> => {
     const app = await createServer()
     return app.listen(Environment.port, () => {
       print.log(
-        `server listening on http://127.0.0.1:${Environment.port}/, in ${Environment.identity} mode.`,
+        `server listening on http://127.0.0.1:${Environment.port}/, in ${Environment.identity} mode, the starting time is ${new Date().toLocaleString()}`,
       )
       bootstrap.after()
     })

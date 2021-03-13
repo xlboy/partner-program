@@ -1,5 +1,5 @@
+import { Result } from 'app/@types/sys.type'
 import Userinfo from 'app/entities/userinfo.entity'
-import statusFormat from 'app/helpers/statusFormat'
 import { UserinfoService } from 'app/services'
 import { Get, JsonController, QueryParam, QueryParams } from 'routing-controllers'
 import { Inject } from 'typedi'
@@ -11,7 +11,7 @@ export class UserinfoController {
   constructor() { }
 
   @Get('/user/reg')
-  async reg(@QueryParams() user: Userinfo): Promise<any> {
+  async reg(@QueryParams() user: Userinfo): Promise<Result.Format> {
     return await this.userinfoService.create(user)
   }
 
@@ -19,7 +19,7 @@ export class UserinfoController {
   async login(
     @QueryParam('username') username: string,
     @QueryParam('password') password: string
-  ): Promise<any> {
+  ): Promise<Result.Format> {
     return await this.userinfoService.login({ username, password })
   }
 }
