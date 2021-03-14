@@ -1,0 +1,1 @@
+export const secretOrPrivateKey = 'XLBOY_PARTNER_GO'

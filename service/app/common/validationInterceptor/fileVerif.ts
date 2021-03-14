@@ -5,7 +5,7 @@ import { Request, Response } from "koa"
 
 
 export default function (...args: any[]) {
-    return function (context: any, next: (err?: any) => Promise<any>) {
-
+    return async function (context: any, next: (err?: any) => Promise<any>): Promise<any> {
+        return
     }
 }

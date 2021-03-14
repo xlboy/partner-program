@@ -21,6 +21,6 @@ const validationType: ValidationTypeObj = {
 }
 
 
-export default function(type: string, ...args: any[]) {
+export default function (type: string, ...args: any[]) {
     return validationType[type](...args)
-} 
+}

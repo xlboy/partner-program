@@ -4,6 +4,8 @@ import Userinfo from 'app/entities/userinfo.entity'
 import validateEntity from 'app/common/validateEntity'
 import statusFormat from 'app/common/statusFormat';
 import { Result } from 'app/@types/sys.type';
+import jwt from 'jsonwebtoken'
+import { secretOrPrivateKey } from 'app/constants/user'
 
 @Service()
 export class UserinfoService {
@@ -36,13 +38,27 @@ export class UserinfoService {
 
   }
 
-  async login(userinfo: { username: string, password: string }) {
+  async findUser(userinfo: { username: string, password: string }): Promise<Userinfo | undefined> {
     const { username, password } = userinfo
-    const findResult = await this.repository.find({ username, password })
-    if (findResult.length > 0) {
-      return statusFormat.success({ msg: '登陆成功' })
-    } else {
-      return statusFormat.success({ msg: '账号或密码有误' })
+    const findResult = await (() => {
+      const where = { username, password }
+      const select: (keyof Userinfo)[] = ['nickname', 'sex', 'age', 'email', 'id', 'username']
+      return this.repository.findOne({ where, select })
+    })();
+
+    return findResult
+  }
+
+  generateJWT(userinfo: Userinfo): string {
+    const { username, id } = userinfo
+    const encryptionObj = {
+      username,
+      id,
+      date: parseInt(String(+new Date() / 1000))
     }
+    const tokenResult = jwt.sign(encryptionObj, secretOrPrivateKey, {
+      expiresIn: '2d'
+    })
+    return tokenResult
   }
 }
