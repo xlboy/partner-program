@@ -11,8 +11,7 @@ export class SessionsController {
   constructor() {}
   
   @Get('/sessions')
-  @UseBefore(...validationInterceptor('USER_AUTHORIZE'))
-  // @Authorized()
+  @UseBefore(validationInterceptor('USER_AUTHORIZE'))
   async session(@QueryParam('username') username: string): Promise<any> {
     // console.log('SessionsService', this.sessionsService.create({
     //   username, token: ''

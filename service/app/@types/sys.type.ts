@@ -16,12 +16,3 @@ export namespace Result {
     }
 }
 
-export namespace Router {
-    export enum ValidationType {
-        /* 用户jwt授权 */
-        USER_AUTHORIZE = 'USER_AUTHORIZE',
-        /* 文件限制，只允许IMG */
-        FILE_IMG = 'FILE_IMG',
-        FILE_EXECL = 'FILE_EXECL',
-    }
-}
