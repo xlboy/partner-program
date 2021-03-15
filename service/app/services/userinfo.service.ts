@@ -2,13 +2,13 @@ import { getRepository, MongoRepository, Repository } from 'typeorm'
 import { Service } from 'typedi'
 import Userinfo from 'app/entities/userinfo.entity'
 import validateEntity from 'app/common/validateEntity'
-import statusFormat from 'app/common/statusFormat';
+import resultFormat from 'app/common/resultFormat';
 import { Result } from 'app/@types/sys.type';
 import jwt from 'jsonwebtoken'
-import { secretOrPrivateKey } from 'app/constants/user'
+import { UserPrivateKey  } from 'app/constants/user'
 
 @Service()
-export class UserinfoService {
+export default class UserinfoService {
   repository: Repository<Userinfo>
 
   constructor() {
@@ -27,18 +27,18 @@ export class UserinfoService {
       const isRepeat = await verifUserRepeat(userinfo.username)
 
       if (isRepeat) {
-        return statusFormat.error({ msg: '用户名已存在', code: Result.Code.DATA_REPEAT })
+        return resultFormat.error('DATA_REPEAT', '用户名已存在')
       } else {
         await this.repository.save(userinfo)
-        return statusFormat.success({ msg: '创建成功' })
+        return resultFormat.success({ msg: '创建成功' })
       }
     } catch (error) {
-      return statusFormat.error({ msg: error, code: Result.Code.DATA_WRONG })
+      return resultFormat.error('DATA_WRONG', error)
     }
 
   }
 
-  async findUser(userinfo: { username: string, password: string }): Promise<Userinfo | undefined> {
+  async findUser(userinfo: Pick<Userinfo, 'username' | 'password'>): Promise<Userinfo | undefined> {
     const { username, password } = userinfo
     const findResult = await (() => {
       const where = { username, password }
@@ -49,14 +49,18 @@ export class UserinfoService {
     return findResult
   }
 
-  generateJWT(userinfo: Userinfo): string {
+  findUserOne(id: number) {
+    return this.repository.findOne({ where: { id } })
+  }
+
+  generateJWT(userinfo: Pick<Userinfo, 'username' | 'id'>): string {
     const { username, id } = userinfo
     const encryptionObj = {
       username,
       id,
       date: parseInt(String(+new Date() / 1000))
     }
-    const tokenResult = jwt.sign(encryptionObj, secretOrPrivateKey, {
+    const tokenResult = jwt.sign(encryptionObj, UserPrivateKey , {
       expiresIn: '2d'
     })
     return tokenResult

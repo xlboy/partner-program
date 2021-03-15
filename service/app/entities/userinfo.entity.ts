@@ -11,10 +11,12 @@ import PlanInfo from './planInfo.entity'
 
 @Entity('userinfo')
 export default class Userinfo extends BaseEntity {
+  @MaxLength(16, { message: '用户名长度不可超过10个字符' })
   @IsNotEmpty({ message: '用户名不可为空' })
   @Column()
   username: string
 
+  @MaxLength(16, { message: '密码长度不可超过16个字符' })
   @IsNotEmpty({ message: '密码不可为空' })
   @Column()
   password: string
@@ -22,6 +24,7 @@ export default class Userinfo extends BaseEntity {
   @Column({ nullable: true })
   email?: string
 
+  @MaxLength(16, { message: '昵称长度不可超过8个字符' })
   @IsNotEmpty({ message: '昵称不可为空' })
   @Column()
   nickname: string
@@ -29,7 +32,7 @@ export default class Userinfo extends BaseEntity {
   @Column({ nullable: true })
   age?: number;
 
-  @Column({ nullable: true })
+  @Column({ default: true })
   sex?: boolean;
 
   @OneToMany(() => PlanInfo, planInfo => planInfo.userinfo)
@@ -37,4 +40,7 @@ export default class Userinfo extends BaseEntity {
 
   @ManyToMany(() => PlanGroup, planGroup => planGroup.userinfo)
   planGroup: PlanGroup[];
+
+  @OneToMany(() => PlanGroup, planGroup => planGroup.founder, { cascade: true })
+  planGroupFounder: PlanGroup[];
 }

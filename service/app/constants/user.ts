@@ -1,1 +1,1 @@
-export const secretOrPrivateKey = 'XLBOY_PARTNER_GO'
+export const UserPrivateKey  = 'XLBOY_PARTNER_GO'

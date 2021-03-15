@@ -1,7 +1,7 @@
 import { Result } from 'app/@types/sys.type'
-import statusFormat from 'app/common/statusFormat'
+import resultFormat from 'app/common/resultFormat'
 import Userinfo from 'app/entities/userinfo.entity'
-import { UserinfoService } from 'app/services'
+import UserinfoService from 'app/services/userinfo.service'
 import { Get, JsonController, QueryParam, QueryParams } from 'routing-controllers'
 import { Inject } from 'typedi'
 
@@ -24,8 +24,7 @@ export class UserinfoController {
     const findResult = await this.userinfoService.findUser({ username, password })
 
     if (findResult) {
-      return statusFormat.success({
-        msg: '登陆成功',
+      return resultFormat.success({
         data: {
           token: this.userinfoService.generateJWT(findResult),
           ...findResult
@@ -33,9 +32,6 @@ export class UserinfoController {
       })
     }
 
-    return statusFormat.error({
-      code: Result.Code.VERIF_ERROR,
-      msg: '账号或密码有误'
-    })
+    return resultFormat.error('VERIF_ERROR', '账号或密码有误')
   }
 }

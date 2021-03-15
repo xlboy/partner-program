@@ -3,7 +3,7 @@ import { Service } from 'typedi'
 import Session from 'app/entities/sessions.entity'
 
 @Service()
-export class SessionsService {
+export default class SessionsService {
   repository: Repository<Session>
 
   constructor() {
