@@ -29,7 +29,7 @@ export default class PlanGroup extends BaseEntity {
   })
   isNotify?: boolean;
 
-  @ManyToOne(() => Userinfo, userinfo => userinfo.planGroupFounder)
+  @ManyToOne(() => Userinfo)
   founder: Userinfo
 
   @OneToMany(() => PlanInfo, planInfo => planInfo.planGroup)

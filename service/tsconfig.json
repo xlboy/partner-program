@@ -13,7 +13,8 @@
     "emitDecoratorMetadata": true,
     "typeRoots": [
       "node_modules/@types",
-      "typings"
+      "typings",
+      "app/@types"
     ],
     "baseUrl": ".",
     "paths": {
@@ -24,7 +25,9 @@
 
   "compileOnSave": false,
   "includes": [
-    "src/**/*"
+    "src/**/*",
+    "app/**/*",
+    "app/@types/*"
   ],
   "exclude": [
     "node_modules",

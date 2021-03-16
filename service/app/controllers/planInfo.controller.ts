@@ -1,37 +1,27 @@
+
 import { Result } from 'app/@types/sys.type'
 import resultFormat from 'app/common/resultFormat'
-import Userinfo from 'app/entities/userinfo.entity'
-import UserinfoService from 'app/services/userinfo.service'
+import validateEntity from 'app/common/validateEntity'
+import PlanInfo from 'app/entities/planInfo.entity'
+import PlanInfoService from 'app/services/planInfo.service'
 import { Get, JsonController, QueryParam, QueryParams } from 'routing-controllers'
 import { Inject } from 'typedi'
 
 @JsonController()
-export class UserinfoController {
+export class PlanInfoController {
   @Inject()
-  userinfoService: UserinfoService
+  planInfoService: PlanInfoService
   constructor() { }
 
-  @Get('/user/reg')
-  async reg(@QueryParams() user: Userinfo): Promise<Result.Format> {
-    return await this.userinfoService.create(user)
-  }
-
-  @Get('/user/login')
-  async login(
-    @QueryParam('username') username: string,
-    @QueryParam('password') password: string
+  @Get('/plan-info/create')
+  async create(
+    @QueryParams() planInfo: PlanInfo
   ): Promise<Result.Format> {
-    const findResult = await this.userinfoService.findUser({ username, password })
-
-    if (findResult) {
-      return resultFormat.success({
-        data: {
-          token: this.userinfoService.generateJWT(findResult),
-          ...findResult
-        }
-      })
+    try {
+      await validateEntity(planInfo)
+    } catch (error) {
+      return resultFormat.error('DATA_WRONG', error)
     }
-
-    return resultFormat.error('VERIF_ERROR', '账号或密码有误')
+    return await this.planInfoService.create(planInfo)
   }
 }

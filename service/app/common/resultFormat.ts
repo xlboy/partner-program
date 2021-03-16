@@ -5,7 +5,6 @@
 import { Result } from "app/@types/sys.type"
 import { ResultCode } from "app/constants/resultFormat"
 
-
 export default {
     success({ data = {}, msg = 'ok' }): Result.Format {
         return {

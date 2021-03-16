@@ -1,4 +1,4 @@
-import { CompleteStatus } from 'app/@types/planInfo.type'
+import { CompleteStatus } from 'app/constants/planInfo'
 import { MinLength, IsNotEmpty } from 'class-validator'
 import {
   Entity,
@@ -11,6 +11,7 @@ import Userinfo from './userinfo.entity'
 
 @Entity('plan_info')
 export default class PlanInfo extends BaseEntity {
+  @IsNotEmpty({ message: 'dayTime不可为空' })
   @Column()
   dayTime: number;
 
@@ -20,7 +21,9 @@ export default class PlanInfo extends BaseEntity {
   @Column()
   endTime: number;
 
-  @Column()
+  @Column({
+    default: true
+  })
   isRemind: boolean;
 
   @Column()
@@ -31,10 +34,10 @@ export default class PlanInfo extends BaseEntity {
     enum: CompleteStatus,
     default: CompleteStatus.NOT_START
   })
-  completeStatus: CompleteStatus
+  completeStatus?: CompleteStatus
 
   @Column()
-  remark: string;
+  remark?: string;
 
   @ManyToOne(() => Userinfo, userinfo => userinfo.planInfo)
   userinfo: Userinfo;

@@ -1,5 +1,7 @@
+
 import { Result } from 'app/@types/sys.type'
 import resultFormat from 'app/common/resultFormat'
+import validateEntity from 'app/common/validateEntity'
 import Userinfo from 'app/entities/userinfo.entity'
 import UserinfoService from 'app/services/userinfo.service'
 import { Get, JsonController, QueryParam, QueryParams } from 'routing-controllers'
@@ -13,6 +15,11 @@ export class UserinfoController {
 
   @Get('/user/reg')
   async reg(@QueryParams() user: Userinfo): Promise<Result.Format> {
+    try {
+      await validateEntity(user)
+    } catch (error) {
+      return resultFormat.error('DATA_WRONG', error)
+    }
     return await this.userinfoService.create(user)
   }
 

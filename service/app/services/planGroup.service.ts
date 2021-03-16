@@ -8,13 +8,9 @@ import Userinfo from '../entities/userinfo.entity';
 @Service()
 export default class PlanGroupService {
   repository: Repository<PlanGroup>
-  userinfoRepository: Repository<Userinfo>
 
-  @Inject()
-  userinfoService: UserinfoService
   constructor() {
     this.repository = getRepository(PlanGroup)
-    this.userinfoRepository = getRepository(Userinfo)
   }
 
   async create(

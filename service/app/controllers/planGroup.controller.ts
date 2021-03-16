@@ -1,4 +1,4 @@
-import { Result } from 'app/@types/sys.type'
+
 import resultFormat from 'app/common/resultFormat'
 import { Get, JsonController, QueryParam, QueryParams, Req, UseBefore } from 'routing-controllers'
 import { Inject } from 'typedi'
@@ -10,6 +10,7 @@ import UserinfoService from 'app/services/userinfo.service';
 import { UserPrivateKey } from 'app/constants/user'
 import jwt from 'jsonwebtoken'
 import validateEntity from 'app/common/validateEntity';
+import { Result } from 'app/@types/sys.type';
 
 @JsonController()
 export class PlanGroupController {

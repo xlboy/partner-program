@@ -3,9 +3,9 @@ import { Service } from 'typedi'
 import Userinfo from 'app/entities/userinfo.entity'
 import validateEntity from 'app/common/validateEntity'
 import resultFormat from 'app/common/resultFormat';
-import { Result } from 'app/@types/sys.type';
+;
 import jwt from 'jsonwebtoken'
-import { UserPrivateKey  } from 'app/constants/user'
+import { UserPrivateKey } from 'app/constants/user'
 
 @Service()
 export default class UserinfoService {
@@ -22,18 +22,13 @@ export default class UserinfoService {
       return findResult.length > 0
     }
 
-    try {
-      await validateEntity(userinfo)
-      const isRepeat = await verifUserRepeat(userinfo.username)
+    const isRepeat = await verifUserRepeat(userinfo.username)
 
-      if (isRepeat) {
-        return resultFormat.error('DATA_REPEAT', '用户名已存在')
-      } else {
-        await this.repository.save(userinfo)
-        return resultFormat.success({ msg: '创建成功' })
-      }
-    } catch (error) {
-      return resultFormat.error('DATA_WRONG', error)
+    if (isRepeat) {
+      return resultFormat.error('DATA_REPEAT', '用户名已存在')
+    } else {
+      await this.repository.save(userinfo)
+      return resultFormat.success({ msg: '创建成功' })
     }
 
   }
@@ -60,7 +55,7 @@ export default class UserinfoService {
       id,
       date: parseInt(String(+new Date() / 1000))
     }
-    const tokenResult = jwt.sign(encryptionObj, UserPrivateKey , {
+    const tokenResult = jwt.sign(encryptionObj, UserPrivateKey, {
       expiresIn: '2d'
     })
     return tokenResult
