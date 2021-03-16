@@ -2,7 +2,7 @@ import { Authorized, Get, JsonController, QueryParam, UseBefore } from 'routing-
 import Environment from 'configs/environments'
 import SessionsService from 'app/services/sessions.service'
 import { Inject } from 'typedi'
-import validationInterceptor from 'app/common/validationInterceptor'
+import validationInterceptor from 'app/helpers/validationInterceptor'
 
 @JsonController()
 export class SessionsController {

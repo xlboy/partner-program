@@ -1,8 +1,7 @@
 import { getRepository, MongoRepository, Repository } from 'typeorm'
-import { Inject, Service } from 'typedi'
-import resultFormat from 'app/common/resultFormat';
+import { Service } from 'typedi'
+import resultFormat from 'app/helpers/resultFormat';
 import PlanGroup from '../entities/planGroup.entity';
-import UserinfoService from 'app/services/userinfo.service';
 import Userinfo from '../entities/userinfo.entity';
 
 @Service()

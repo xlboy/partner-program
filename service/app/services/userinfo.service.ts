@@ -1,8 +1,8 @@
 import { getRepository, MongoRepository, Repository } from 'typeorm'
 import { Service } from 'typedi'
 import Userinfo from 'app/entities/userinfo.entity'
-import validateEntity from 'app/common/validateEntity'
-import resultFormat from 'app/common/resultFormat';
+import validateEntity from 'app/helpers/validateEntity'
+import resultFormat from 'app/helpers/resultFormat';
 ;
 import jwt from 'jsonwebtoken'
 import { UserPrivateKey } from 'app/constants/user'
@@ -46,18 +46,5 @@ export default class UserinfoService {
 
   findUserOne(id: number) {
     return this.repository.findOne({ where: { id } })
-  }
-
-  generateJWT(userinfo: Pick<Userinfo, 'username' | 'id'>): string {
-    const { username, id } = userinfo
-    const encryptionObj = {
-      username,
-      id,
-      date: parseInt(String(+new Date() / 1000))
-    }
-    const tokenResult = jwt.sign(encryptionObj, UserPrivateKey, {
-      expiresIn: '2d'
-    })
-    return tokenResult
   }
 }

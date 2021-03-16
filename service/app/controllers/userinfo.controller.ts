@@ -1,11 +1,12 @@
 
 import { Result } from 'app/@types/sys.type'
-import resultFormat from 'app/common/resultFormat'
-import validateEntity from 'app/common/validateEntity'
+import resultFormat from 'app/helpers/resultFormat'
+import validateEntity from 'app/helpers/validateEntity'
 import Userinfo from 'app/entities/userinfo.entity'
 import UserinfoService from 'app/services/userinfo.service'
 import { Get, JsonController, QueryParam, QueryParams } from 'routing-controllers'
 import { Inject } from 'typedi'
+import { generateUserJWT } from 'app/helpers/jwt'
 
 @JsonController()
 export class UserinfoController {
@@ -31,9 +32,11 @@ export class UserinfoController {
     const findResult = await this.userinfoService.findUser({ username, password })
 
     if (findResult) {
+      const { username, id } = findResult
+      const token = generateUserJWT({ username, id }, '2d');
       return resultFormat.success({
         data: {
-          token: this.userinfoService.generateJWT(findResult),
+          token,
           ...findResult
         }
       })

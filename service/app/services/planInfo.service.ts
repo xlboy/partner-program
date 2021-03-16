@@ -1,6 +1,6 @@
 import { getRepository, MongoRepository, Repository } from 'typeorm'
-import {  Service } from 'typedi'
-import resultFormat from 'app/common/resultFormat';
+import { Service } from 'typedi'
+import resultFormat from 'app/helpers/resultFormat';
 import PlanInfo from 'app/entities/planInfo.entity';
 
 @Service()
@@ -11,7 +11,11 @@ export default class PlanInfoService {
     this.repository = getRepository(PlanInfo)
   }
 
-  async create(planInfo: PlanInfo) {
+  async create(
+    planInfo: PlanInfo,
+    founderId: number,
+    planGroupNum: number
+  ) {
     return '' as any
   }
 }

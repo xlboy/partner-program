@@ -1,4 +1,4 @@
-import { CompleteStatus } from 'app/constants/planInfo'
+import { CompleteStatus, ContentTypes } from 'app/constants/planInfo'
 import { MinLength, IsNotEmpty } from 'class-validator'
 import {
   Entity,
@@ -15,19 +15,26 @@ export default class PlanInfo extends BaseEntity {
   @Column()
   dayTime: number;
 
+  @IsNotEmpty({ message: 'startTime不可为空' })
   @Column()
   startTime: number;
 
+  @IsNotEmpty({ message: 'endTime不可为空' })
   @Column()
   endTime: number;
 
-  @Column({
-    default: true
-  })
-  isRemind: boolean;
 
+  @IsNotEmpty({ message: 'contentType不可为空' })
+  @Column({
+    type: "enum",
+    enum: ContentTypes,
+    default: ContentTypes.DIY
+  })
+  contentType: ContentTypes;
+
+  @IsNotEmpty({ message: 'content不可为空' })
   @Column()
-  content: boolean;
+  content: string;
 
   @Column({
     type: "enum",
@@ -35,6 +42,11 @@ export default class PlanInfo extends BaseEntity {
     default: CompleteStatus.NOT_START
   })
   completeStatus?: CompleteStatus
+
+  @Column({
+    default: true
+  })
+  isRemind: boolean;
 
   @Column()
   remark?: string;
