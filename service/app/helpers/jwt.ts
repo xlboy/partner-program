@@ -36,6 +36,6 @@ export function getUserinfoJWTFormat(token: string): UserinfoJWTFormat {
     if (userinfoJWT) {
         return userinfoJWT
     } else {
-        throw new Error("getUserinfoJWTFormat -> error");
+        throw 'getUserinfoJWTFormat -> error';
     }
 }

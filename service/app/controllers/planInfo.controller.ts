@@ -23,31 +23,30 @@ export class PlanInfoController {
   @Get('/plan-info/create')
   @UseBefore(validationInterceptor('USER_AUTHORIZE'))
   async create(
-    @QueryParams() planInfo: PlanInfo,
-    planGroupNum: number,
-    @Req() req: Request
+    @QueryParams() params: { planGroupNum: number } & PlanInfo,
+    @Req() req: Request,
   ): Promise<Result.Format> {
+    const { planGroupNum, ...planInfo } = params
     let planGroupId: number
+
     try {
       await validateEntity(planInfo)
-
       if (!planGroupNum) {
-        throw new Error("请传递计划组号");
+        throw "请传递计划组号"
       }
-      
       planGroupId = await (async () => {
         const findGroupResult = await this.planGroupService.findGroupNum(planGroupNum)
         if (findGroupResult) {
           return findGroupResult.id
         } else {
-          throw new Error("计划组号不存在");
+          throw "计划组号不存在"
         }
       })();
 
     } catch (error) {
-      console.log("error", error)
       return resultFormat.error('DATA_WRONG', error)
     }
+
     try {
       const authorization = req.req.headers.authorization
       const { id: founderId } = getUserinfoJWTFormat(authorization)

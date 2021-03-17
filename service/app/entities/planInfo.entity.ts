@@ -35,7 +35,6 @@ export default class PlanInfo extends BaseEntity {
 
 
   @IsNotEmpty({ message: 'contentType不可为空' })
-  
   @Column({
     type: "enum",
     enum: ContentTypes,
@@ -59,7 +58,9 @@ export default class PlanInfo extends BaseEntity {
   })
   isRemind?: boolean;
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   remark?: string;
 
   @ManyToOne(() => Userinfo, userinfo => userinfo.planInfo)
