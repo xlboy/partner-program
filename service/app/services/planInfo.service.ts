@@ -2,6 +2,9 @@ import { getRepository, MongoRepository, Repository } from 'typeorm'
 import { Service } from 'typedi'
 import resultFormat from 'app/helpers/resultFormat';
 import PlanInfo from 'app/entities/planInfo.entity';
+import Userinfo from '../entities/userinfo.entity';
+import PlanGroup from 'app/entities/planGroup.entity';
+
 
 @Service()
 export default class PlanInfoService {
@@ -11,11 +14,24 @@ export default class PlanInfoService {
     this.repository = getRepository(PlanInfo)
   }
 
+
   async create(
-    planInfo: PlanInfo,
+    _planInfo: Pick<PlanInfo, 'dayTime' | 'startTime' | 'endTime' | 'contentType' | 'content' | 'isRemind' | 'remark'>,
     founderId: number,
-    planGroupNum: number
+    planGroupId: number
   ) {
-    return '' as any
+    const userinfo = new Userinfo()
+    userinfo.id = founderId
+
+    const planGroup = new PlanGroup()
+    planGroup.id = planGroupId
+
+    const planInfo = new PlanInfo({
+      ..._planInfo,
+      userinfo,
+      planGroup
+    })
+    await this.repository.save(planInfo)
+    return resultFormat.success({ msg: '计划创建成功' })
   }
 }

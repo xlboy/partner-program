@@ -29,6 +29,9 @@ export default class PlanGroup extends BaseEntity {
   })
   isNotify?: boolean;
 
+  @Column()
+  groupNum?: number;
+
   @ManyToOne(() => Userinfo)
   founder: Userinfo
 

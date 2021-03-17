@@ -31,7 +31,7 @@ export function verifUserJWT(token: string): UserinfoJWTFormat | false {
     }
 }
 
-export function getUserinfoJWTFormat(token: string) {
+export function getUserinfoJWTFormat(token: string): UserinfoJWTFormat {
     const userinfoJWT = verifUserJWT(token)
     if (userinfoJWT) {
         return userinfoJWT

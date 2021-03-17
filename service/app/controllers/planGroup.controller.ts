@@ -35,6 +35,5 @@ export class PlanGroupController {
     } catch (error) {
       return resultFormat.error('TOKEN_SERVICE_ERROR', error)
     }
-
   }
 }

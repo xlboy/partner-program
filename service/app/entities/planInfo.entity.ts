@@ -11,6 +11,16 @@ import Userinfo from './userinfo.entity'
 
 @Entity('plan_info')
 export default class PlanInfo extends BaseEntity {
+
+  constructor(data?: { [k in keyof PlanInfo]?: PlanInfo[k] }) {
+    super()
+    if (data) {
+      Object.keys(data).forEach(key => {
+        this[key] = data[key]
+      })
+    }
+  }
+
   @IsNotEmpty({ message: 'dayTime不可为空' })
   @Column()
   dayTime: number;
@@ -25,6 +35,7 @@ export default class PlanInfo extends BaseEntity {
 
 
   @IsNotEmpty({ message: 'contentType不可为空' })
+  
   @Column({
     type: "enum",
     enum: ContentTypes,
@@ -46,7 +57,7 @@ export default class PlanInfo extends BaseEntity {
   @Column({
     default: true
   })
-  isRemind: boolean;
+  isRemind?: boolean;
 
   @Column()
   remark?: string;

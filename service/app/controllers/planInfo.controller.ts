@@ -9,11 +9,15 @@ import { Inject } from 'typedi'
 import validationInterceptor from 'app/helpers/validationInterceptor'
 import { Request } from 'koa'
 import { getUserinfoJWTFormat } from 'app/helpers/jwt'
+import PlanGroupService from 'app/services/planGroup.service'
 
 @JsonController()
 export class PlanInfoController {
   @Inject()
   planInfoService: PlanInfoService
+
+  @Inject()
+  planGroupService: PlanGroupService
   constructor() { }
 
   @Get('/plan-info/create')
@@ -23,15 +27,31 @@ export class PlanInfoController {
     planGroupNum: number,
     @Req() req: Request
   ): Promise<Result.Format> {
+    let planGroupId: number
     try {
       await validateEntity(planInfo)
+
+      if (!planGroupNum) {
+        throw new Error("请传递计划组号");
+      }
+      
+      planGroupId = await (async () => {
+        const findGroupResult = await this.planGroupService.findGroupNum(planGroupNum)
+        if (findGroupResult) {
+          return findGroupResult.id
+        } else {
+          throw new Error("计划组号不存在");
+        }
+      })();
+
     } catch (error) {
+      console.log("error", error)
       return resultFormat.error('DATA_WRONG', error)
     }
     try {
       const authorization = req.req.headers.authorization
       const { id: founderId } = getUserinfoJWTFormat(authorization)
-      return await this.planInfoService.create(planInfo, founderId, planGroupNum)
+      return await this.planInfoService.create(planInfo, founderId, planGroupId)
     } catch (error) {
       return resultFormat.error('TOKEN_SERVICE_ERROR', error)
     }
