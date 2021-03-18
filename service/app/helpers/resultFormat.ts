@@ -15,11 +15,12 @@ export default {
     },
     error(
         codeType: keyof typeof ResultCode,
-        msg = 'error'
+        _msg: string | Error = 'error'
     ): Result.Format {
+        const msg = _msg instanceof Error ? _msg.message : _msg
         return {
             code: ResultCode[codeType],
-            msg,
+            msg
         }
     }
 }

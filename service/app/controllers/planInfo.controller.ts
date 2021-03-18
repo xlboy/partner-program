@@ -32,14 +32,14 @@ export class PlanInfoController {
     try {
       await validateEntity(planInfo)
       if (!planGroupNum) {
-        throw "请传递计划组号"
+        throw new Error('请传递计划组号')
       }
       planGroupId = await (async () => {
         const findGroupResult = await this.planGroupService.findGroupNum(planGroupNum)
         if (findGroupResult) {
           return findGroupResult.id
         } else {
-          throw "计划组号不存在"
+          throw new Error('计划组号不存在')
         }
       })();
 
