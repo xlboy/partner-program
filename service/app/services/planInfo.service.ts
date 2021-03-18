@@ -20,11 +20,9 @@ export default class PlanInfoService {
     founderId: number,
     planGroupId: number
   ) {
-    const userinfo = new Userinfo()
-    userinfo.id = founderId
+    const userinfo = new Userinfo({ id: founderId })
 
-    const planGroup = new PlanGroup()
-    planGroup.id = planGroupId
+    const planGroup = new PlanGroup({ id: planGroupId })
 
     const planInfo = new PlanInfo({
       ..._planInfo,

@@ -17,13 +17,9 @@ export default class PlanGroupService {
     founderId: number
   ) {
     try {
-      const founderInfo = new Userinfo()
-      founderInfo.id = founderId
-
-      const planGroup = new PlanGroup()
-      planGroup.groupName = groupName
-      planGroup.introduce = introduce
-      planGroup.founder = founderInfo
+      const founderInfo = new Userinfo({ id: founderId })
+      const planGroup = new PlanGroup({ groupName, introduce, founder: founderInfo })
+      
       planGroup.groupNum = await (async () => {
         const allPlanGroupNum = (await this.findAll()).map(item => item.groupNum)
         let groupNum: number

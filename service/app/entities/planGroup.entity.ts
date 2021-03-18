@@ -14,6 +14,16 @@ import Userinfo from './userinfo.entity'
 
 @Entity('plan_group')
 export default class PlanGroup extends BaseEntity {
+
+  constructor(data?: { [k in keyof PlanGroup]?: PlanGroup[k] }) {
+    super()
+    if (data) {
+      Object.keys(data).forEach(key => {
+        this[key] = data[key]
+      })
+    }
+  }
+
   @MaxLength(30, { message: 'introduce内容长度不可超过30个字符'})
   @IsNotEmpty({ message: 'introduce不可为空' })
   @Column()

@@ -8,7 +8,6 @@ import {
 import BaseEntity from './common/base.entity'
 import PlanGroup from './planGroup.entity'
 import Userinfo from './userinfo.entity'
-
 @Entity('plan_info')
 export default class PlanInfo extends BaseEntity {
 
