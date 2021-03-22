@@ -5,8 +5,9 @@ import verifConnectUser from './common/verifConnectUser';
 export default function (wss: WebSocket.Server) {
     wss.on('connection', (ws, req) => {
         const userResult = verifConnectUser(req.url)
-        if (userResult instanceof Number) {
-            ws.close(+userResult, 'token error')
+        console.log('userResult', userResult)
+        if (typeof userResult === 'number') {
+            ws.close(1010, '我服了')
         } else {
             ws.on('message', message => {
                 console.log('received: %s', message);

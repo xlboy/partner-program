@@ -5,6 +5,7 @@ import Taro from '@tarojs/taro';
 import { connectSocket } from '@/utils/socket';
 import { AtButton } from 'taro-ui';
 import { ServiceCode } from '@/constants/ServiceCode';
+import { SocketCode } from '@/constants/SocketCode';
 
 const Index = () => {
   return (
@@ -26,11 +27,18 @@ const Index = () => {
       socketTask.onMessage((msg) => {
         console.log('msg', msg);
       });
-      socketTask.onClose(({ code, reason }) => {
-        if (code === ServiceCode.DATA_WRONG) {
-          console.log('没传token啊，索嗨')
+      socketTask.onClose(({ code }) => {
+        let title: string = '';
+        console.log('code', code);
+        switch (code) {
+          case SocketCode.TOKEN_ERROR:
+            title = '请登陆后重新尝试';
+            break;
+          case SocketCode.TOKEN_OVERDUE:
+            title = '身份已过期，请重新登陆';
+            break;
         }
-        Taro.showToast({ title: reason });
+        Taro.showToast({ title, icon: 'none' });
       });
     }
   }
