@@ -2,7 +2,7 @@ import { UserPrivateKey } from 'app/constants/user';
 import Userinfo from 'app/entities/userinfo.entity';
 import jwt from 'jsonwebtoken'
 
-interface UserinfoJWTFormat {
+export interface UserinfoJWTFormat {
     username: string;
     id: number;
     date: number
