@@ -2,6 +2,7 @@
  * @description 连接成功的处理
  */
 
+import { ContentType } from "app/constants/socket";
 import { UserinfoJWTFormat } from "app/helpers/jwt";
 import WebSocket from "ws";
 
@@ -33,7 +34,25 @@ class PlanIM {
     listenMessage(userWS: WebSocket) {
         userWS.on('message', data => {
             console.log('来信息了,艹', data)
+            const messageResult = verifMessageFormat(String(data))
+            if (!messageResult) {
+                userWS.send({ contentType: ContentType.SYSTEM, content: '传输的数据有误' })
+            } else {
+                
+            }
         })
+
+        function verifMessageFormat(data: string): { type: any, content: any } | false {
+            try {
+                const { type, content } = JSON.parse(data)
+                if (!type || !content) {
+                    return false
+                }
+                return { type, content }
+            } catch (error) {
+                return false
+            }
+        }
     }
 }
 
