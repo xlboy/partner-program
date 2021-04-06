@@ -36,3 +36,10 @@ class Account extends React.Component<IProps, OwnState> {
 }
 
 export default Account as ComponentClass<OwnProps>;
+
+interface Test {
+  [key: string]: any;
+}
+
+function a(type: string, action: Test): void;
+function a(type: string, { bbb }) {}
