@@ -1,5 +1,7 @@
+import { ContentType } from 'app/constants/socket';
 import WebSocket from 'ws'
 import verifConnectUser from './common/verifConnectUser';
+import PlanIM from './planIM';
 
 
 export default function (wss: WebSocket.Server) {
@@ -7,17 +9,12 @@ export default function (wss: WebSocket.Server) {
         const userResult = verifConnectUser(req.url)
         console.log('userResult', userResult)
         if (typeof userResult === 'number') {
-            ws.close(1010, '我服了')
+            ws.send({ contentType: ContentType.SYSTEM, content: '未登陆' })
+            ws.close(1010)
         } else {
-            ws.on('message', message => {
-                console.log('received: %s', message);
-            });
+            ws.send({ contentType: ContentType.SYSTEM, content: '连接成功' })
+            PlanIM.add(ws, userResult)
         }
-        // console.log('ws', req.url)
-
-        // console.log('there is a user connect again', ws)
-        // ws.send('something');
-
     });
-
+    
 }
