@@ -3,3 +3,8 @@ export enum ContentType {
     CHAT,
     PLAN_NOTIFY
 }
+
+export enum MessageType {
+    CHAT = 'CHAT',
+    PLAN = 'PLAN'
+}

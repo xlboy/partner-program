@@ -2,11 +2,13 @@
  * @description 连接成功的处理
  */
 
+import { Socket } from "app/@types/socket.type";
 import { ContentType } from "app/constants/socket";
 import { UserinfoJWTFormat } from "app/helpers/jwt";
 import WebSocket from "ws";
+import messageHandle from "./core/messageHandle";
 
-interface OnlineUser {
+export interface OnlineUser {
     ws: WebSocket,
     userinfo: UserinfoJWTFormat
 }
@@ -36,13 +38,13 @@ class PlanIM {
             console.log('来信息了,艹', data)
             const messageResult = verifMessageFormat(String(data))
             if (!messageResult) {
-                userWS.send({ contentType: ContentType.SYSTEM, content: '传输的数据有误' })
+                userWS.send({ contentType: ContentType.SYSTEM, content: '传输の数据格式有误，type/content' })
             } else {
-                
+                messageHandle(messageResult, userWS, this.onlineUsers)
             }
         })
 
-        function verifMessageFormat(data: string): { type: any, content: any } | false {
+        function verifMessageFormat(data: string): Socket.Message | false {
             try {
                 const { type, content } = JSON.parse(data)
                 if (!type || !content) {

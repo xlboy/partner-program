@@ -1,6 +1,6 @@
 import { ContentType } from 'app/constants/socket';
 import WebSocket from 'ws'
-import verifConnectUser from './common/verifConnectUser';
+import verifConnectUser from './core/verifConnectUser';
 import PlanIM from './planIM';
 
 
@@ -16,5 +16,5 @@ export default function (wss: WebSocket.Server) {
             PlanIM.add(ws, userResult)
         }
     });
-    
+
 }
