@@ -1,8 +1,13 @@
 import { ContentType } from 'app/constants/socket';
+import { redisClient } from 'app/redis';
 import WebSocket from 'ws'
 import verifConnectUser from './core/verifConnectUser';
 import PlanIM from './planIM';
 
+import * as userHasReadMessage from 'app/redis/modules/userHasReadMessage'
+import * as planGroupLastMessage from 'app/redis/modules/planGroupLastMessage'
+
+planGroupLastMessage.update(3, 4)
 
 export default function (wss: WebSocket.Server) {
     wss.on('connection', (ws, req) => {

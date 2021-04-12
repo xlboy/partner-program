@@ -20,7 +20,7 @@
     "paths": {
       "configs": ["configs"],
       "app": ["app"]
-    }
+    },
   },
 
   "compileOnSave": false,

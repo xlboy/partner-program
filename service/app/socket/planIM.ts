@@ -8,31 +8,35 @@ import { UserinfoJWTFormat } from "app/helpers/jwt";
 import WebSocket from "ws";
 import messageHandle from "./core/messageHandle";
 
-export interface OnlineUser {
-    ws: WebSocket,
-    userinfo: UserinfoJWTFormat
+export interface OnlineUsers {
+    [userId: number]: {
+        ws: WebSocket,
+        userinfo: UserinfoJWTFormat
+    }
 }
 
 class PlanIM {
-    onlineUsers: OnlineUser[] = []
+    onlineUsers: OnlineUsers = {}
+
     constructor() { }
+
     add(userWS: WebSocket, userinfo: UserinfoJWTFormat) {
-        this.onlineUsers.push({ ws: userWS, userinfo })
+        const userId = userinfo.id
+        this.onlineUsers[userId] = { ws: userWS, userinfo }
         this.initNewUserWS(userWS, userinfo)
     }
+
     initNewUserWS(userWS: WebSocket, userinfo: UserinfoJWTFormat) {
         this.listenClose(userWS, userinfo)
     }
+
     listenClose(userWS: WebSocket, userinfo: UserinfoJWTFormat) {
-        const removeOnlineUser = () => {
-            const userIndex = this.onlineUsers.findIndex(u => u.userinfo.id === userinfo.id)
-            this.onlineUsers.splice(userIndex, 1)
-        }
         userWS.on('close', (code: number, reason: string) => {
             console.log(`🆚 表示遗憾，又有一人离线...`)
-            removeOnlineUser()
+            delete this.onlineUsers[userinfo.id]
         })
     }
+
     listenMessage(userWS: WebSocket) {
         userWS.on('message', data => {
             console.log('来信息了,艹', data)
