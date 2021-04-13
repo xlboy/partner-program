@@ -1,24 +1,29 @@
 import { Socket } from "app/@types/socket.type";
-import { ContentType, MessageType } from "app/constants/socket";
+import { ContentType } from "app/constants/socket";
+import { UserinfoJWTFormat } from "app/helpers/jwt";
 import { OnlineUsers } from "app/socket/planIM";
-import WebSocket from "_@types_ws@7.4.1@@types/ws";
-import chatHandle from "./chatHandle";
-import planHandle from "./planHandle";
+import groupChatHandle from "./groupChatHandle";
 
+export interface MessageHandleParams {
+    data: Socket.Message;
+    userWS: WebSocket;
+    userinfo: UserinfoJWTFormat;
+    onlineUsers: OnlineUsers
+}
 
 type MessageHandleMap = {
-    [k in keyof typeof MessageType]: (data: Socket.Message, userWS: WebSocket, onlineUsers: OnlineUsers) => void
+    [k in keyof typeof ContentType]?: (params: MessageHandleParams) => void
 }
 
 
 const messageHandleMap: MessageHandleMap = {
-    [MessageType.CHAT]: chatHandle,
-    [MessageType.PLAN]: planHandle
+    [ContentType.GROUP_CHAT]: groupChatHandle
 }
 
-export default function (data: Socket.Message, userWS: WebSocket, onlineUsers: OnlineUsers) {
+export default function (params: MessageHandleParams) {
+    const { data, userWS } = params
     if (messageHandleMap[data.type]) {
-        messageHandleMap[data.type](data, userWS, onlineUsers)
+        messageHandleMap[data.type](params)
     } else {
         userWS.send({ contentType: ContentType.SYSTEM, content: 'type不正确' })
     }

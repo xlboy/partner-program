@@ -5,7 +5,6 @@
 import { Socket } from "app/@types/socket.type";
 import { ContentType } from "app/constants/socket";
 import { UserinfoJWTFormat } from "app/helpers/jwt";
-import WebSocket from "ws";
 import messageHandle from "./core/messageHandle";
 
 export interface OnlineUsers {
@@ -28,6 +27,7 @@ class PlanIM {
 
     initNewUserWS(userWS: WebSocket, userinfo: UserinfoJWTFormat) {
         this.listenClose(userWS, userinfo)
+        this.listenMessage(userWS, userinfo)
     }
 
     listenClose(userWS: WebSocket, userinfo: UserinfoJWTFormat) {
@@ -37,14 +37,14 @@ class PlanIM {
         })
     }
 
-    listenMessage(userWS: WebSocket) {
+    listenMessage(userWS: WebSocket, userinfo: UserinfoJWTFormat) {
         userWS.on('message', data => {
             console.log('来信息了,艹', data)
             const messageResult = verifMessageFormat(String(data))
             if (!messageResult) {
                 userWS.send({ contentType: ContentType.SYSTEM, content: '传输の数据格式有误，type/content' })
             } else {
-                messageHandle(messageResult, userWS, this.onlineUsers)
+                messageHandle({ data: messageResult, userWS, userinfo, onlineUsers: this.onlineUsers })
             }
         })
 

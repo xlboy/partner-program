@@ -2,11 +2,10 @@ import { redisClient } from ".."
 
 /**
  * @description 最后一条消息の哈希格式如下↓
+ * type imPlanGroupMessageId = number
+ * [planGroupId: string]: imPlanGroupMessageId;
  */
-type imPlanGroupMessageId = number
-interface HashPlanGroupLastMessage {
-    [planGroupId: string]: imPlanGroupMessageId;
-}
+
 
 const moduleKey = 'PlanGroupLastMessage-Key'
 

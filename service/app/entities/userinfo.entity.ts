@@ -39,6 +39,9 @@ export default class Userinfo extends BaseEntity {
   @Column()
   nickname: string
 
+  @Column({ default: 'http://q1.qlogo.cn/g?b=qq&nk=52852983&s=640' })
+  avatar?: string;
+
   @Column({ nullable: true })
   age?: number;
 

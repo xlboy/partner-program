@@ -1,4 +1,4 @@
-import { MessageType } from 'app/constants/socket'
+import { ContentType, MessageType } from 'app/constants/socket'
 import { MinLength, IsNotEmpty } from 'class-validator'
 import {
   Entity,
@@ -23,7 +23,7 @@ export default class ImPlanGroupMessage extends BaseEntity {
 
   @IsNotEmpty({ message: 'content不可为空' })
   @Column("simple-json")
-  content: { contentType: MessageType; content: any };
+  content: { type: ContentType; content: any };
 
 
   @ManyToOne(() => Userinfo, userinfo => userinfo.planInfo)

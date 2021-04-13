@@ -2,14 +2,11 @@ import { redisClient } from ".."
 
 /**
  * @description 用户已读消息の哈希格式如下↓
+ * type imPlanGroupMessageId = number
+ * [userId: string]: {
+ *  [planGroupId: string]: imPlanGroupMessageId;
+ * }
  */
-type imPlanGroupMessageId = number
-interface HashUserHasReadMessage {
-    [userId: string]: {
-        [planGroupId: string]: imPlanGroupMessageId;
-    }
-}
-
 const moduleKey = 'UserHasReadMessage-Key'
 
 export async function update(
