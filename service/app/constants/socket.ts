@@ -1,4 +1,4 @@
-export enum ContentType {
+export enum SocketContentType {
     SYSTEM,
     GROUP_CHAT,
     PRIVATE_CHAT,

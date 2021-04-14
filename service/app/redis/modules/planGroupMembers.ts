@@ -15,6 +15,11 @@ export function update(
 }
 
 
+/**
+ * 
+ * @param planGroupId 计划组ID
+ * @returns 此计划组所有的成员ID
+ */
 export function get(planGroupId: number): Promise<number[]> {
     return new Promise(r => {
         redisClient.hget(moduleKey, String(planGroupId), (err, value) => {

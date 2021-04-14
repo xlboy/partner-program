@@ -1,17 +1,18 @@
-import { ContentType } from 'app/constants/socket';
+import { SocketContentType } from 'app/constants/socket';
+import WebSocket from 'ws';
 import _WebSocket from 'ws'
 import verifConnectUser from './core/verifConnectUser';
 import PlanIM from './planIM';
-
+import socketUtils from 'app/helpers/socket/socketUtils'
 export default function (wss: _WebSocket.Server) {
     wss.on('connection', (ws: WebSocket, req) => {
         const userResult = verifConnectUser(req.url)
-        
+
         if (typeof userResult === 'number') {
-            ws.send({ contentType: ContentType.SYSTEM, content: '未登陆' })
-            ws.close(1010)
+            socketUtils.send(ws, { contentType: SocketContentType.SYSTEM, content: '未登陆' })
+            ws.close()
         } else {
-            ws.send({ contentType: ContentType.SYSTEM, content: '连接成功' })
+            ws.send({ contentType: SocketContentType.SYSTEM, content: '连接成功' })
             PlanIM.add(ws, userResult)
         }
     });

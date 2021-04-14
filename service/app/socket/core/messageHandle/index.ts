@@ -1,7 +1,8 @@
 import { Socket } from "app/@types/socket.type";
-import { ContentType } from "app/constants/socket";
+import { SocketContentType } from "app/constants/socket";
 import { UserinfoJWTFormat } from "app/helpers/jwt";
 import { OnlineUsers } from "app/socket/planIM";
+import WebSocket from "ws";
 import groupChatHandle from "./groupChatHandle";
 
 export interface MessageHandleParams {
@@ -12,12 +13,12 @@ export interface MessageHandleParams {
 }
 
 type MessageHandleMap = {
-    [k in keyof typeof ContentType]?: (params: MessageHandleParams) => void
+    [k in keyof typeof SocketContentType]?: (params: MessageHandleParams) => void
 }
 
 
 const messageHandleMap: MessageHandleMap = {
-    [ContentType.GROUP_CHAT]: groupChatHandle
+    [SocketContentType.GROUP_CHAT]: groupChatHandle
 }
 
 export default function (params: MessageHandleParams) {
@@ -25,6 +26,6 @@ export default function (params: MessageHandleParams) {
     if (messageHandleMap[data.type]) {
         messageHandleMap[data.type](params)
     } else {
-        userWS.send({ contentType: ContentType.SYSTEM, content: 'type不正确' })
+        userWS.send({ contentType: SocketContentType.SYSTEM, content: 'type不正确' })
     }
 }

@@ -1,8 +1,8 @@
-import { ContentType } from "app/constants/socket";
+import { SocketContentType } from "app/constants/socket";
 
 export namespace Socket {
     export interface Message {
-        type: ContentType,
+        type: SocketContentType,
         content: any
     }
 }

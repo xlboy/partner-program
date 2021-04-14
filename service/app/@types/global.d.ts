@@ -1,8 +1,12 @@
-import { ContentType } from "app/constants/socket";
 import _WebSocket from "ws";
 
+
+// type WebSocketSendParams = `{"contentType":${SocketContentType},"content":${any}}`
+
 declare global {
-    class WebSocket extends _WebSocket {
-        send(params: { contentType: ContentType, content: any }): void;
-    }
+    
+    // class WebSocket extends _WebSocket {
+    //     send(params: WebSocketSendParams): void;
+    // }
 }
+
