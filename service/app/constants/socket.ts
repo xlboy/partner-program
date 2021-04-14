@@ -2,7 +2,8 @@ export enum ContentType {
     SYSTEM,
     GROUP_CHAT,
     PRIVATE_CHAT,
-    PLAN_NOTIFY
+    PLAN_NOTIFY,
+    MSG_STATUS,
 }
 
 // 暂无用

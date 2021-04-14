@@ -14,21 +14,25 @@ export default class ImPlanGroupMessageService {
     this.repository = getRepository(ImPlanGroupMessage)
   }
 
-
   async create(
     founderId: number,
     planGroupId: number,
     messageContent: ImPlanGroupMessage['content']
   ): Promise<boolean> {
-    const userinfo = new Userinfo({ id: founderId })
-    const planGroup = new PlanGroup({ id: planGroupId })
+    try {
+      const userinfo = new Userinfo({ id: founderId })
+      const planGroup = new PlanGroup({ id: planGroupId })
 
-    const imPlanGroupMessage = new ImPlanGroupMessage({
-      userinfo,
-      planGroup,
-      content: messageContent
-    })
-    await this.repository.save(imPlanGroupMessage)
-    return true
+      const imPlanGroupMessage = new ImPlanGroupMessage({
+        userinfo,
+        planGroup,
+        content: messageContent
+      })
+      await this.repository.save(imPlanGroupMessage)
+      return true
+    } catch (error) {
+      console.error(error)
+      return false
+    }
   }
 }
