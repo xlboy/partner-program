@@ -4,8 +4,7 @@ import './index.scss';
 import Taro from '@tarojs/taro';
 import { connectSocket } from '@/utils/socket';
 import { AtButton } from 'taro-ui';
-import { ServiceCode } from '@/constants/ServiceCode';
-import { SocketCode } from '@/constants/SocketCode';
+import { SocketContentType } from '@/constants/socket';
 
 const Index = () => {
   return (
@@ -30,14 +29,14 @@ const Index = () => {
       socketTask.onClose(({ code }) => {
         let title: string = '';
         console.log('code', code);
-        switch (code) {
-          case SocketCode.TOKEN_ERROR:
-            title = '请登陆后重新尝试';
-            break;
-          case SocketCode.TOKEN_OVERDUE:
-            title = '身份已过期，请重新登陆';
-            break;
-        }
+        // switch (code) {
+        //   case SocketContentType.TOKEN_ERROR:
+        //     title = '请登陆后重新尝试';
+        //     break;
+        //   case SocketContentType.TOKEN_OVERDUE:
+        //     title = '身份已过期，请重新登陆';
+        //     break;
+        // }
         Taro.showToast({ title, icon: 'none' });
       });
     }
