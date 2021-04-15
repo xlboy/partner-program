@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text } from '@tarojs/components';
 import './index.scss';
 import Taro from '@tarojs/taro';
-import { connectSocket } from '@/utils/socket';
+// import { connectSocket } from '@/utils/socket';
 import { AtButton } from 'taro-ui';
 import { SocketContentType } from '@/constants/socket';
 

@@ -7,13 +7,9 @@ import { SocketContentType } from "app/constants/socket";
 import { UserinfoJWTFormat } from "app/helpers/jwt";
 import WebSocket from "ws";
 import messageHandle from "./core/messageHandle";
+import { OnlineUsers } from "./types";
 
-export interface OnlineUsers {
-    [userId: number]: {
-        ws: WebSocket,
-        userinfo: UserinfoJWTFormat
-    }
-}
+
 
 class PlanIM {
     onlineUsers: OnlineUsers = {}
