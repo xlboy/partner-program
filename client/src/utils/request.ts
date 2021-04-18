@@ -10,7 +10,7 @@ interface OptionsType {
   url: string;
   noLoading?: boolean;
 }
-export default (options: OptionsType = { method: 'GET', data: {}, url: '', noLoading: false }) => {
+export default <T = any>(options: OptionsType = { method: 'GET', data: {}, url: '', noLoading: false }): Promise<T> => {
   if (!options.noLoading) {
     Taro.showLoading({
       title: '加载中'
@@ -24,22 +24,28 @@ export default (options: OptionsType = { method: 'GET', data: {}, url: '', noLoa
       delete options.data[key];
     }
   }
-  return Taro.request({
+  return Taro.request<T>({
     url: baseUrl + options.url,
     data: {
       ...options.data
     },
     header: {
-      'X-Token': Taro.getStorageSync('token'),
+      authorization: Taro.getStorageSync('token'),
       'Content-Type': 'application/json'
     },
     method: options.method.toUpperCase() as keyof Taro.request.method
-  }).then((res) => {
-    setTimeout(() => {
-      Taro.hideLoading();
-    }, 100);
-    if (!noConsole) {
-      console.log(`${new Date().toLocaleString('zh', { hour12: false })}【${options.url} 】【返回】`, res.data);
-    }
-  });
+  })
+    .then((res) => {
+      setTimeout(() => {
+        Taro.hideLoading();
+      }, 100);
+      if (!noConsole) {
+        console.log(`${new Date().toLocaleString('zh', { hour12: false })}【${options.url} 】【返回】`, res.data);
+      }
+      return res.data;
+    })
+    .catch((error) => {
+      Taro.showToast({ title: error });
+      throw new Error(error);
+    });
 };

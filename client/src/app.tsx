@@ -1,7 +1,7 @@
 import { Provider } from 'react-redux';
 import dva from './utils/dva';
 import models from './models';
-import 'taro-ui/dist/style/index.scss'
+import 'taro-ui/dist/style/index.scss';
 import './app.scss';
 import { FC } from '@tarojs/taro';
 import React from 'react';
@@ -15,7 +15,7 @@ const dvaApp = dva.createApp({
   initialState: {},
   models
 });
-const store = dvaApp.getStore();
+export const appStore = dvaApp.getStore();
 
-const App: FC = (props) => <Provider store={store}>{props.children}</Provider>;
+const App: FC = (props) => <Provider store={appStore}>{props.children}</Provider>;
 export default App;

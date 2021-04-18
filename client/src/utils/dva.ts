@@ -1,6 +1,7 @@
 import Taro from '@tarojs/taro';
 import { create } from 'dva-core';
 import createLoading from 'dva-loading';
+import dva from '_dva@2.4.1@dva';
 import sadImg from '../static/images/sad.png';
 
 let app;

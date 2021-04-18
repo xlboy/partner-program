@@ -1,4 +1,4 @@
-import Taro from '@tarojs/taro';
+import Taro, { Chain } from '@tarojs/taro';
 
 const HTTP_STATUS = {
   SUCCESS: 200,
@@ -14,11 +14,11 @@ const HTTP_STATUS = {
   GATEWAY_TIMEOUT: 504
 };
 
-const rspInterceptor = (chain) => {
+const rspInterceptor = (chain: Chain) => {
   const requestParams = chain.requestParams;
 
   return chain.proceed(requestParams).then((res) => {
-    if (res.statusCode >= 200 && res.statusCode < 300) {
+    if (res.statusCode > 200 && res.statusCode < 300) {
       return Promise.reject('请求资源不存在');
     } else if (res.statusCode === HTTP_STATUS.BAD_GATEWAY) {
       return Promise.reject('服务端出现了问题');
@@ -30,7 +30,7 @@ const rspInterceptor = (chain) => {
       Taro.setStorageSync('Authorization', '');
       return Promise.reject('需要鉴权');
     } else if (res.statusCode === HTTP_STATUS.SUCCESS) {
-      return res.data;
+      return res;
     }
   });
 };
