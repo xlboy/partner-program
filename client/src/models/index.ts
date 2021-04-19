@@ -2,4 +2,19 @@ import accountModel from './accountModel';
 import common from './common';
 import userModel from './userModel';
 
-export default [common, accountModel, userModel];
+export default [userModel.core];
+
+const allModelName = {
+    [userModel.namespace]: userModel,
+    test: userModel
+} as const
+
+
+type PickModelName<T extends keyof typeof allModelName> = T
+
+export type AllModelEffect =
+    `${PickModelName<'user'>}/${keyof typeof allModelName['user']['core']['effects']}` |
+    `${PickModelName<'test'>}/${keyof typeof allModelName['test']['core']['effects']}`
+
+// 哭了…尽力了，若ts里的静态类型能与动态类型部分相结合（相关联的const固定值），就能一劳永逸了…
+// [k in keyof typeof allModelName]: `${keyof typeof allModelName[k]['core']['effects']}`

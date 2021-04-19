@@ -1,4 +1,5 @@
-import { AnyAction, Dispatch } from 'redux';
+import { Dispatch } from 'redux';
+import { AllModelEffect } from '.';
 import { StateType as AccountState } from './accountModel';
 
 export interface Loading {
@@ -7,7 +8,7 @@ export interface Loading {
 }
 
 export interface ConnectProps {
-  dispatch: Dispatch<AnyAction>;
+  dispatch: Store.ConnectDispatch<Store.AnyAction<any, AllModelEffect>>;
 }
 
 export interface ConnectState {
