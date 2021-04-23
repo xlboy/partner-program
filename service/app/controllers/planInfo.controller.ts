@@ -52,7 +52,7 @@ export class PlanInfoController {
       const { id: founderId } = getUserinfoJWTFormat(authorization)
       return await this.planInfoService.create(planInfo, founderId, planGroupId)
     } catch (error) {
-      return resultFormat.error('TOKEN_SERVICE_ERROR', error)
+      return resultFormat.error('SERVICE_NOT_ERROR', error)
     }
   }
 }

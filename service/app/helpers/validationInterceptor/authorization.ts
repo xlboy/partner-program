@@ -10,7 +10,7 @@ export default function (...args: any[]) {
         if (verifUserJWT(authorization)) {
             return next()
         } else {
-            context.res.statusCode = 403
+            context.res.statusCode = 401
             context.res.end(
                 JSON.stringify(
                     resultFormat.error('TOKEN_OVERDUC', 'Token expired or does not exist')

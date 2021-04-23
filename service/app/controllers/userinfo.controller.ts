@@ -4,10 +4,11 @@ import resultFormat from 'app/helpers/resultFormat'
 import validateEntity from 'app/helpers/validateEntity'
 import Userinfo from 'app/entities/userinfo.entity'
 import UserinfoService from 'app/services/userinfo.service'
-import { Get, JsonController, QueryParam, QueryParams } from 'routing-controllers'
+import { Get, JsonController, QueryParam, QueryParams, Req, UseBefore } from 'routing-controllers'
 import { Inject } from 'typedi'
-import { generateUserJWT } from 'app/helpers/jwt'
-
+import { generateUserJWT, getUserinfoJWTFormat } from 'app/helpers/jwt'
+import { Request } from 'koa'
+import validationInterceptor from 'app/helpers/validationInterceptor'
 @JsonController()
 export class UserinfoController {
   @Inject()
@@ -43,5 +44,22 @@ export class UserinfoController {
     }
 
     return resultFormat.error('VERIF_ERROR', '账号或密码有误')
+  }
+
+  @Get('/user/getUserinfo')
+  @UseBefore(validationInterceptor('USER_AUTHORIZE'))
+  async getUserinfo(@Req() req: Request,): Promise<Result.Format> {
+    try {
+      const authorization = req.req.headers.authorization
+      const { id: founderId } = getUserinfoJWTFormat(authorization)
+      const findResult = await this.userinfoService.findUserOne(founderId)
+      return resultFormat.success({
+        data: {
+          ...findResult
+        }
+      })
+    } catch (error) {
+      return resultFormat.error('DATA_WRONG', error)
+    }
   }
 }

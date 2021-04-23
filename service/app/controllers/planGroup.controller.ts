@@ -36,4 +36,35 @@ export class PlanGroupController {
       return resultFormat.error('TOKEN_SERVICE_ERROR', error)
     }
   }
+
+  @Get('/plan-group/getPlanGroupList')
+  @UseBefore(validationInterceptor('USER_AUTHORIZE'))
+  async getPlanGroupList(
+    @Req() req: Request
+  ): Promise<Result.Format> {
+    let founderId: number
+
+    try {
+      const authorization = req.req.headers.authorization;
+      ({ id: founderId } = getUserinfoJWTFormat(authorization));
+    } catch (error) {
+      return resultFormat.error('TOKEN_SERVICE_ERROR', error)
+    }
+
+    try {
+      const planGroupList = await this.planGroupService.findUserGroupList(founderId)
+      return resultFormat.success({ msg: 'ok', data: planGroupList })
+    } catch (error) {
+      return resultFormat.error('SERVICE_NOT_ERROR', error)
+    }
+  }
+  
+  @Get('/plan-group/addPlanGroup')
+  @UseBefore(validationInterceptor('USER_AUTHORIZE'))
+  async addPlanGroup(
+    @QueryParam('groupNum') groupNum: number,
+    @Req() req: Request
+  ) {
+    console.log('你添加个几把呢，草泥马小逼崽子噢')
+  }
 }

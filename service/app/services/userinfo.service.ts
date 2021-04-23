@@ -6,6 +6,7 @@ import resultFormat from 'app/helpers/resultFormat';
 ;
 import jwt from 'jsonwebtoken'
 import { UserPrivateKey } from 'app/constants/user'
+import { Result } from 'app/@types/sys.type';
 
 @Service()
 export default class UserinfoService {
@@ -15,7 +16,7 @@ export default class UserinfoService {
     this.repository = getRepository(Userinfo)
   }
 
-  async create(userinfo: Userinfo) {
+  async create(userinfo: Userinfo): Promise<Result.Format> {
 
     const verifUserRepeat = async (username: string): Promise<boolean> => {
       const findResult = await this.repository.find({ username })
@@ -44,7 +45,8 @@ export default class UserinfoService {
     return findResult
   }
 
-  findUserOne(id: number) {
+  findUserOne(id: number): Promise<Userinfo> {
     return this.repository.findOne({ where: { id } })
   }
+
 }

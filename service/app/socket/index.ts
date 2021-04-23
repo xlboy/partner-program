@@ -9,10 +9,10 @@ export default function (wss: _WebSocket.Server) {
         const userResult = verifConnectUser(req.url)
 
         if (typeof userResult === 'number') {
-            socketUtils.send(ws, { contentType: SocketContentType.SYSTEM, content: '未登陆' })
+            socketUtils.send(ws, { contentType: SocketContentType.SYSTEM, content: 'token有误' })
             ws.close()
         } else {
-            ws.send({ contentType: SocketContentType.SYSTEM, content: '连接成功' })
+            socketUtils.send(ws, { contentType: SocketContentType.SYSTEM, content: '连接成功' })
             PlanIM.add(ws, userResult)
         }
     });

@@ -11,7 +11,7 @@ const controllersPath = path.resolve(__dirname, '../') + '/app/controllers/*.con
 export const routingConfigs: RoutingControllersOptions = {
   // controllers: dictToArray(controllers),
   controllers: [controllersPath],
-  // middlewares: dictToArray(middlewares),
+  middlewares: dictToArray(middlewares),
 
   // interceptors: dictToArray(interceptors), // 全局拦截器
 

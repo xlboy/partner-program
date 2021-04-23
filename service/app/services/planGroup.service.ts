@@ -18,8 +18,8 @@ export default class PlanGroupService {
   ) {
     try {
       const founderInfo = new Userinfo({ id: founderId })
-      const planGroup = new PlanGroup({ groupName, introduce, founder: founderInfo })
-      
+      const planGroup = new PlanGroup({ groupName, introduce, founder: founderInfo, userinfo: [founderInfo] })
+
       planGroup.groupNum = await (async () => {
         const allPlanGroupNum = (await this.findAll()).map(item => item.groupNum)
         let groupNum: number
@@ -52,4 +52,20 @@ export default class PlanGroupService {
     return findResult.length > 0
   }
 
+  async findUserGroupList(userId: number): Promise<{ myGroup: PlanGroup[], otherGroup: PlanGroup[] }> {
+    const myGroup = await this.repository.find({
+      founder: new Userinfo({ id: userId })
+    })
+    return {
+      myGroup,
+      otherGroup: []
+    }
+  }
+
+  async addPlanGroupMember(userId: number, groupNum: number) {
+    // const founderInfo = new Userinfo({ id: founderId })
+    // const planGroup = new PlanGroup({ groupName, introduce, founder: founderInfo })
+
+    //   this.repository.save
+  }
 }
