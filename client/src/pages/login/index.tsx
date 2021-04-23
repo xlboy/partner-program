@@ -19,8 +19,8 @@ const Index: FC<IndexProps> = (props) => {
   };
   return (
     <View className="index">
-      <AtInput name="value" title="用户名" type="text" placeholder="单行文本" onChange={formChange.bind(null, 'username')} />
-      <AtInput name="value" title="密码" type="password" placeholder="单行文本" onChange={formChange.bind(null, 'password')} />
+      <AtInput name="value" title="用户名" type="text" placeholder="请输入登陆用户名" onChange={formChange.bind(null, 'username')} />
+      <AtInput name="value" title="密码" type="password" placeholder="请输入密码" onChange={formChange.bind(null, 'password')} />
       <View className="at-row">
         <View className="at-col">
           <AtButton type="primary" onClick={onLogin}>
@@ -41,10 +41,13 @@ const Index: FC<IndexProps> = (props) => {
   }
 
   async function onLogin() {
-    await dispatch<boolean>({
+    const isSuccess = await dispatch<boolean>({
       type: 'user/login',
       payload: loginForm
     });
+    if (isSuccess) {
+      
+    }
   }
 
   async function onReg() {}

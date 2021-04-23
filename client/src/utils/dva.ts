@@ -1,7 +1,6 @@
 import Taro from '@tarojs/taro';
 import { create } from 'dva-core';
 import createLoading from 'dva-loading';
-import dva from '_dva@2.4.1@dva';
 import sadImg from '../static/images/sad.png';
 
 let app;
@@ -12,9 +11,9 @@ function createApp(opt) {
   // redux日志
   // opt.onAction = [createLogger()];
   opt.onError = (err) => {
-    console.error(err);
+    // console.error(err);
     Taro.hideLoading();
-    Taro.showToast({ title: '服务器错误', image: sadImg });
+    // Taro.showToast({ title: '服务器错误', image: sadImg });
   };
   app = create(opt);
   app.use(createLoading({}));

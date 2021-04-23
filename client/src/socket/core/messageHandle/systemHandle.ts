@@ -1,4 +1,5 @@
-import { SocketType } from '@/@types/socket.type';
-export default function(data: SocketType.DataParams) {
-  data.content;
+import { SocketType } from "@/socket/types";
+
+export default function(data: any) {
+  data
 }

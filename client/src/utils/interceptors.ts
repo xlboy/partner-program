@@ -1,33 +1,34 @@
+
+import { StorageUserJWTKey } from '@/constants/storage';
 import Taro, { Chain } from '@tarojs/taro';
 
-const HTTP_STATUS = {
-  SUCCESS: 200,
-  CREATED: 201,
-  ACCEPTED: 202,
-  CLIENT_ERROR: 400,
-  AUTHENTICATE: 401,
-  FORBIDDEN: 403,
-  NOT_FOUND: 404,
-  SERVER_ERROR: 500,
-  BAD_GATEWAY: 502,
-  SERVICE_UNAVAILABLE: 503,
-  GATEWAY_TIMEOUT: 504
-};
-
+enum HTTP_STATUS {
+  /** 正常 */
+  SUCCESS = 200,
+  /** 没有权限访问 */
+  FORBIDDEN = 403,
+  /** 需要鉴权，TOKEN过期等 */
+  AUTHENTICATE = 401,
+  /** 服务器内部未知错误… */
+  SERVICE_NOT_ERROR = 500
+}
+// 服了，个der addInterceptor, j毛用没有
 const rspInterceptor = (chain: Chain) => {
   const requestParams = chain.requestParams;
 
   return chain.proceed(requestParams).then((res) => {
     if (res.statusCode > 200 && res.statusCode < 300) {
       return Promise.reject('请求资源不存在');
-    } else if (res.statusCode === HTTP_STATUS.BAD_GATEWAY) {
+    } else if (res.statusCode === HTTP_STATUS.SERVICE_NOT_ERROR) {
       return Promise.reject('服务端出现了问题');
     } else if (res.statusCode === HTTP_STATUS.FORBIDDEN) {
-      Taro.setStorageSync('Authorization', '');
-      // TODO 根据自身业务修改
       return Promise.reject('没有权限访问');
     } else if (res.statusCode === HTTP_STATUS.AUTHENTICATE) {
-      Taro.setStorageSync('Authorization', '');
+      Taro.showToast({ title: '账户已过期，请重新登陆', icon: 'none' })
+      Taro.setStorageSync(StorageUserJWTKey, '');
+      setTimeout(() => {
+        Taro.navigateTo({ url: 'pages/login/index' })
+      }, 500);
       return Promise.reject('需要鉴权');
     } else if (res.statusCode === HTTP_STATUS.SUCCESS) {
       return res;

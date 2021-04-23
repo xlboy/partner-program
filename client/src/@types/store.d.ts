@@ -1,3 +1,4 @@
+import { AllModelEffect } from '@/models';
 import { EffectType, SubscriptionsMapObject } from 'dva';
 
 declare global {
@@ -11,33 +12,58 @@ declare global {
     }
 
     type ConnectDispatch<A = AnyAction> = <T = any>(action: A) => Promise<T>;
-    interface EffectsCommandMap {
+    interface EffectsCommandMap<
+      State,
+      EffectTypes,
+      ReducerTypes,
+      EffectKeys extends keyof EffectTypes,
+      ReducerKeys extends keyof ReducerTypes
+      > {
       put: {
-        (action: AnyAction): void;
-        resolve: (action: AnyAction) => any;
+        (action: AnyAction<ReducerTypes[ReducerKeys], ReducerKeys>): void;
+        resolve: (action: AnyAction<EffectTypes[EffectKeys], EffectKeys>) => any;
       };
-      call: Function;
-      select: Function;
+      call: <T extends (...args: any[]) => any>(fun: T, ...args: any[]) => ReturnType<T>;
+      select: <F = void>(fun?: (state: any) => F) => F extends void ? State : F;
       take: Function;
       cancel: Function;
       [key: string]: any;
     }
 
     type Reducers<S = any, A = {}> = (state: S, action: { payload: A }) => S;
-    type Effect<P = any> = (action: AnyAction<P>, effects: EffectsCommandMap) => any;
-    type EffectWithType = [Effect, { type: EffectType }];
-    interface Model<M extends Model = {}> {
+    interface Model<
+      M extends Model<any>,
+      TReducer = any,
+      TEffect = any,
+      State = M['state'],
+      EffectTypes = M['effectTypes'],
+      ReducerTypes = M['reducerTypes'],
+      > {
       namespace?: string;
       state?: any;
-      reducers?: {
-        [k in keyof M['reducers']]: Reducers;
+      reducerTypes?: {
+        [k: string]: TReducer
       };
-      effects?: {
-        [k in keyof M['effects']]: Effect | EffectWithType;
+      effectTypes?: {
+        [k: string]: TEffect
+      };
+      reducers?: {
+        [k in keyof ReducerTypes]: Reducers<State, ReducerTypes[k]>
+      };
+      effects: {
+        [k in keyof EffectTypes]:
+        ((
+          action: AnyAction<EffectTypes[k]>,
+          effects: EffectsCommandMap<State, EffectTypes, ReducerTypes, keyof EffectTypes, keyof ReducerTypes>
+        ) => any) |
+        [(
+          action: AnyAction<EffectTypes[k]>,
+          effects: EffectsCommandMap<State, EffectTypes, ReducerTypes, keyof EffectTypes, keyof ReducerTypes>
+        ) => any, { type: EffectType }]
       };
       subscriptions?: SubscriptionsMapObject;
     }
   }
 }
 
-export {};
+export { };

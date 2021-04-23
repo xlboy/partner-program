@@ -1,68 +1,85 @@
-import Taro from '@tarojs/taro';
+import Taro, { getStorageSync } from '@tarojs/taro';
 import * as Api from '../service/apiService';
 import AppSocket from '@/socket/appSocket';
-import { ApiUserLogin } from '@/apis/modules/user';
+import { ApiGetUserinfo, ApiUserLogin } from '@/apis/modules/user';
 import { ApiFormat } from '@/apis/types/public';
-import { ApiUserLoginResult } from '@/apis/types/user';
+import { ApiUserinfoResult } from '@/apis/types/user';
+import { StorageUserJWTKey } from '@/constants/storage';
 
 export interface StateType {
+  info: ApiUserinfoResult & { token: string };
   im: AppSocket | null;
-  username: string;
-  nickname: string;
-  sex: boolean;
-  token: string;
-  age: null | number;
-  email: null | string;
 }
 
-interface ModelType {
+type ModelType = {
   namespace: string;
   state: StateType;
-  effects: {
-    login: Store.Effect<{
+  effectTypes: {
+    initUserinfo: {};
+    login: {
       username: string;
       password: string;
-    }>;
-    connectSocket: Store.Effect;
+    };
+    connectSocket: { token: string };
   };
-  reducers: {
-    SetIM: Store.Reducers<StateType, Pick<StateType, 'im'>>;
-    SetUserinfo: Store.Reducers<StateType, StateType>;
+  reducerTypes: {
+    SetIM: Pick<StateType, 'im'>;
+    SetUserinfo: StateType['info'];
   };
+  effects: {};
 }
 
-const modelNamespace = 'user' as const;
-const model: Store.Model & ModelType = {
-  namespace: 'user' as const,
+const modelNamespace = 'user';
+const modelCore: Store.Model<ModelType> = {
+  namespace: modelNamespace,
   state: {
     im: null,
-    token: '',
-    username: '',
-    nickname: 'nickname',
-    age: null,
-    email: null,
-    sex: false
+    info: {
+      token: '',
+      avatar: '',
+      username: '',
+      nickname: 'nickname',
+      age: null,
+      email: null,
+      sex: false
+    }
   },
   effects: {
+    *initUserinfo({ payload }, { call, put }) {
+      const userinfo: StateType['info'] = yield call(async () => {
+        const result = await ApiGetUserinfo()
+        return result.data
+      })
+      yield put({ type: 'SetUserinfo', payload: userinfo });
+      yield put.resolve({
+        type: 'connectSocket',
+        payload: {
+          token: getStorageSync(StorageUserJWTKey)
+        }
+      })
+    },
     *login({ payload }, { call, put }) {
       const { username, password } = payload;
-      const loginResult: ApiFormat<ApiUserLoginResult> = yield call(ApiUserLogin, username, password);
+      const loginResult: ApiFormat<StateType['info']> = yield call(ApiUserLogin, username, password);
+      const a = yield call(ApiUserLogin, username, password)
       if (loginResult.code === 200) {
-        Taro.showToast({ title: '登陆成功' });
-        yield put({ type: 'SetUserinfo', payload: { ...loginResult.data } });
-        put.resolve({ type: 'connectSocket', payload: { token: loginResult.data?.token } });
+        const { token } = loginResult.data!
+        Taro.showToast({ title: '登陆成功', icon: 'none' });
+        Taro.setStorageSync(StorageUserJWTKey, token)
+        yield put({ type: 'SetUserinfo', payload: { ...loginResult.data! } });
+        yield put.resolve({ type: 'connectSocket', payload: { token } });
+        setTimeout(() => {
+          Taro.navigateTo({ url: '/pages/index/index' })
+        }, 500);
       } else {
-        Taro.showToast({ title: '账号或密码有误' });
+        Taro.showToast({ title: '账号或密码有误', icon: 'none' });
       }
     },
-    *connectSocket({ payload }, { call, put, select }) {
-      const token = yield select((state) => state[modelNamespace].token);
-      if (token !== '') {
-        const im = yield call(async (token: string) => {
-          const im = new AppSocket(token);
-          await im.initConnect();
-          return im;
-        }, token);
+    *connectSocket({ payload }, { call, put }) {
+      const { token } = payload;
+      const im = new AppSocket(token);
+      const connectResult = yield call(async () => await im.initConnect())
+      if (connectResult) {
         yield put({ type: 'SetIM', payload: { im } });
       }
     }
@@ -75,8 +92,8 @@ const model: Store.Model & ModelType = {
       return { ...state, ...payload };
     }
   }
-};
+} as const;
 export default {
-  core: model,
+  core: modelCore,
   namespace: modelNamespace
-};
+} as const;

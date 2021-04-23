@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import { AllModelEffect } from '.';
-import { StateType as AccountState } from './accountModel';
+import { StateType as AccountState } from './chatModel';
 
 export interface Loading {
   global: boolean;
