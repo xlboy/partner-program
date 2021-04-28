@@ -2,7 +2,7 @@ import Taro, { getStorageSync } from '@tarojs/taro';
 import * as Api from '../service/apiService';
 import AppSocket from '@/socket/appSocket';
 import { StorageHistoryChatSessionKey } from '@/constants/storage';
-import { MessageContent } from '@/socket/types';
+import { MessageContent } from '@/socket/typings';
 
 export interface StateType {
   im: null;
@@ -54,6 +54,7 @@ const modelCore: Store.Model<ModelType> = {
     },
     *newChatMsgHandle({ payload: messageContent }, { select }) {
       const state = select()
+      messageContent
       console.log('来新信息啦')
     }
   },

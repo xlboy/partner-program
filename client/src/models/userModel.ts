@@ -2,8 +2,8 @@ import Taro, { getStorageSync } from '@tarojs/taro';
 import * as Api from '../service/apiService';
 import AppSocket from '@/socket/appSocket';
 import { ApiGetUserinfo, ApiUserLogin } from '@/apis/modules/user';
-import { ApiFormat } from '@/apis/types/public';
-import { ApiUserinfoResult } from '@/apis/types/user';
+import { ApiFormat } from '@/apis/typings/public';
+import { ApiUserinfoResult } from '@/apis/typings/user';
 import { StorageUserJWTKey } from '@/constants/storage';
 
 export interface StateType {
@@ -61,7 +61,6 @@ const modelCore: Store.Model<ModelType> = {
     *login({ payload }, { call, put }) {
       const { username, password } = payload;
       const loginResult: ApiFormat<StateType['info']> = yield call(ApiUserLogin, username, password);
-      const a = yield call(ApiUserLogin, username, password)
       if (loginResult.code === 200) {
         const { token } = loginResult.data!
         Taro.showToast({ title: '登陆成功', icon: 'none' });

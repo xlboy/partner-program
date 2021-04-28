@@ -47,6 +47,7 @@ export default <T = any>(options: OptionsType = { method: 'GET', data: {}, url: 
       return res.data;
     })
     .catch((error) => {
+      console.log('error', error)
       if (error instanceof Response) {
         const res = error
         if (res.status > 200 && res.status < 300) {

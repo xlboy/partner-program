@@ -38,6 +38,7 @@ declare global {
       State = M['state'],
       EffectTypes = M['effectTypes'],
       ReducerTypes = M['reducerTypes'],
+      _EffectsCommandMap = EffectsCommandMap<State, EffectTypes, ReducerTypes, keyof EffectTypes, keyof ReducerTypes>
       > {
       namespace?: string;
       state?: any;
@@ -52,14 +53,8 @@ declare global {
       };
       effects: {
         [k in keyof EffectTypes]:
-        ((
-          action: AnyAction<EffectTypes[k]>,
-          effects: EffectsCommandMap<State, EffectTypes, ReducerTypes, keyof EffectTypes, keyof ReducerTypes>
-        ) => any) |
-        [(
-          action: AnyAction<EffectTypes[k]>,
-          effects: EffectsCommandMap<State, EffectTypes, ReducerTypes, keyof EffectTypes, keyof ReducerTypes>
-        ) => any, { type: EffectType }]
+        ((action: AnyAction<EffectTypes[k]>, effects: _EffectsCommandMap) => any) |
+        [(action: AnyAction<EffectTypes[k]>, effects: _EffectsCommandMap) => any, { type: EffectType }]
       };
       subscriptions?: SubscriptionsMapObject;
     }
