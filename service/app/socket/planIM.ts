@@ -7,7 +7,7 @@ import { SocketContentType } from "app/constants/socket";
 import { UserinfoJWTFormat } from "app/helpers/jwt";
 import WebSocket from "ws";
 import messageHandle from "./core/messageHandle";
-import { OnlineUsers } from "./types";
+import { OnlineUsers } from "./typings";
 
 
 

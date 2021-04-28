@@ -2,7 +2,7 @@ import { Socket } from "app/@types/socket.type";
 import { SocketContentType } from "app/constants/socket";
 import { UserinfoJWTFormat } from "app/helpers/jwt";
 import socketUtils from "app/helpers/socket/socketUtils";
-import { OnlineUsers } from "app/socket/types";
+import { OnlineUsers } from "app/socket/typings";
 import WebSocket from "ws";
 import groupChatHandle from "./groupChatHandle";
 

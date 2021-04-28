@@ -58,7 +58,7 @@ export class PlanGroupController {
       return resultFormat.error('SERVICE_NOT_ERROR', error)
     }
   }
-  
+
   @Get('/plan-group/addPlanGroup')
   @UseBefore(validationInterceptor('USER_AUTHORIZE'))
   async addPlanGroup(
