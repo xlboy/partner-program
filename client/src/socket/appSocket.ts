@@ -1,11 +1,11 @@
-import { SocketType } from '@/@types/socket.type';
 import { SocketContentType } from '@/constants/socket';
 import Taro from '@tarojs/taro';
 import connectSocket from './core/connectSocket';
 import messageHandle from './core/messageHandle';
+import { SocketType } from './typings';
 
 export default class AppSocket {
-  url = 'ws://192.168.1.5:3000/chat';
+  url = 'ws://192.168.1.2:3000/chat';
   // status:
   im: Taro.SocketTask;
 

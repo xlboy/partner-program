@@ -1,4 +1,4 @@
-import { ApiUserinfoResult } from '@/apis/types/user';
+import { ApiUserinfoResult } from '@/apis/typings/user';
 import { SocketContentType } from '@/constants/socket';
 
 export namespace SocketType {

@@ -1,6 +1,6 @@
 import request from '@/utils/request';
-import { ApiFormat } from '../types/public';
-import { ApiUserinfoResult, APIUserPlanGroupList } from '../types/user';
+import { ApiFormat } from '../typings/public';
+import { ApiUserinfoResult, APIUserPlanGroupList } from '../typings/user';
 
 export const ApiUserLogin = (username: string, password: string) =>
   request<ApiFormat<ApiUserinfoResult>>({
