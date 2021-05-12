@@ -5,14 +5,17 @@ import messageHandle from './core/messageHandle';
 import { SocketType } from './typings';
 
 export default class AppSocket {
-  url = 'ws://192.168.1.2:3000/chat';
+  private url = 'ws://192.168.1.2:3000/chat';
   // status:
-  im: Taro.SocketTask;
+  private im: Taro.SocketTask;
 
-  constructor(readonly token: string) {}
+  constructor(private readonly token: string) {}
 
   initConnect(): Promise<boolean> {
     return new Promise(async resolve => {
+      if (this.im !== undefined) {
+        resolve(false)
+      }
       let ws = await connectSocket(`${this.url}?token=${this.token}`);
       if (ws) {
         ws.onMessage(wsMessageHandle.bind(this, resolve, ws));
@@ -65,5 +68,9 @@ export default class AppSocket {
         }
       }
     }
+  }
+
+  closeConnect() {
+    this.im.close({})
   }
 }

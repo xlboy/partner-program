@@ -1,27 +1,30 @@
 import Taro, { getStorageSync } from '@tarojs/taro';
-import * as Api from '../service/apiService';
+import * as Api from '../../service/apiService';
 import AppSocket from '@/socket/appSocket';
 import { StorageHistoryChatSessionKey } from '@/constants/storage';
 import { MessageContent } from '@/socket/typings';
+import { SocketContentType } from '@/constants/socket';
 
 export interface StateType {
   im: null;
   chatSession: Array<{
     avatar: string;
     name: string;
-    type: any;
+    type: SocketContentType;
     contentText: string;
+    date: string;
   }>;
   latestInfo: {
-    from: {
-      type: any;
+    type: SocketContentType;
+    content: {
       name: string;
-    };
-    contentText: string;
+      contentText: string;
+      [other: string]: any;
+    }
   } | null
 }
 
-interface ModelType {
+export interface ModelType {
   namespace: string;
   state: StateType;
   reducerTypes: {
@@ -52,9 +55,13 @@ const modelCore: Store.Model<ModelType> = {
       }
       console.log('historyChatSession', historyChatSession)
     },
-    *newChatMsgHandle({ payload: messageContent }, { select }) {
+    *newChatMsgHandle({ payload: messageContent }, { select, put }) {
       const state = select()
-      messageContent
+      const latestInfo = {
+        type: SocketContentType.GROUP_CHAT,
+        name: messageContent.groupId
+      }
+      yield put({ type: 'SetLatestInfo', payload: latestInfo })
       console.log('来新信息啦')
     }
   },

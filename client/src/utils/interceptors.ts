@@ -17,6 +17,7 @@ const rspInterceptor = (chain: Chain) => {
   const requestParams = chain.requestParams;
 
   return chain.proceed(requestParams).then((res) => {
+    console.log('来看看,哪个进来的快？？？？')
     if (res.statusCode > 200 && res.statusCode < 300) {
       return Promise.reject('请求资源不存在');
     } else if (res.statusCode === HTTP_STATUS.SERVICE_NOT_ERROR) {

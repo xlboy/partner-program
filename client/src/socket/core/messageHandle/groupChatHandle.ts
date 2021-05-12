@@ -1,6 +1,8 @@
-import { appStore } from '@/app';
-import { MessageContent } from '@/socket/types'
+
+import { MessageContent } from '@/socket/typings'
+import { getAppStore } from '@/utils/dva'
 
 export default function (content: MessageContent.GroupChat) {
-  appStore.dispatch({ type: 'chat/newChatMsgHandle', payload: content})
+  const appStore = getAppStore()
+  appStore.dispatch({ type: 'chat/newChatMsgHandle', payload: content })
 }

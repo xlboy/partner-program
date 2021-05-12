@@ -1,5 +1,8 @@
-import chatModel from './chatModel';
-import userModel from './userModel';
+import { getAppStore } from '@/utils/dva';
+import { Provider } from 'react-redux';
+import chatModel from './modules/chatModel';
+import userModel from './modules/userModel';
+import React, {FC } from 'react';
 
 export default [userModel.core, chatModel.core];
 
@@ -17,3 +20,5 @@ export type AllModelEffect =
 
 // 哭了…尽力了，若ts里的静态类型能与动态类型部分相结合（相关联的const固定值），就能一劳永逸了…
 // [k in keyof typeof allModelName]: `${keyof typeof allModelName[k]['core']['effects']}`
+
+export { default as mergeProvider } from './utils/mergeProvider'

@@ -53,7 +53,7 @@ export class UserinfoController {
       const authorization = req.req.headers.authorization
       const { id: founderId } = getUserinfoJWTFormat(authorization)
       const findResult = await this.userinfoService.findUserOne(founderId)
-      console.log('findResult', findResult)
+      
       return resultFormat.success({
         data: {
           ...findResult

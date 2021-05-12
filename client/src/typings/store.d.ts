@@ -1,4 +1,6 @@
 import { AllModelEffect } from '@/models';
+import * as chatModel from '@/models/modules/chatModel';
+import * as userModel from '@/models/modules/userModel';
 import { EffectType, SubscriptionsMapObject } from 'dva';
 
 declare global {
@@ -41,7 +43,7 @@ declare global {
       _EffectsCommandMap = EffectsCommandMap<State, EffectTypes, ReducerTypes, keyof EffectTypes, keyof ReducerTypes>
       > {
       namespace?: string;
-      state?: any;
+      state: any;
       reducerTypes?: {
         [k: string]: TReducer
       };
@@ -57,6 +59,11 @@ declare global {
         [(action: AnyAction<EffectTypes[k]>, effects: _EffectsCommandMap) => any, { type: EffectType }]
       };
       subscriptions?: SubscriptionsMapObject;
+    }
+
+    interface DefaultRootState {
+      [chatModel.default.namespace]: chatModel.StateType;
+      [userModel.default.namespace]: userModel.StateType;
     }
   }
 }

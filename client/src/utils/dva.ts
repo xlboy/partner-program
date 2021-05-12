@@ -1,18 +1,18 @@
+import { ConnectProps } from '@/models/typings/connect';
 import Taro from '@tarojs/taro';
 import { create } from 'dva-core';
 import createLoading from 'dva-loading';
 import sadImg from '../static/images/sad.png';
 
 let app;
-let store;
-let dispatch;
+let appStore;
 
-function createApp(opt) {
+export function createApp(opt) {
   // redux日志
   // opt.onAction = [createLogger()];
   opt.onError = (err) => {
     // console.error(err);
-    Taro.hideLoading();
+    // Taro.hideLoading();
     // Taro.showToast({ title: '服务器错误', image: sadImg });
   };
   app = create(opt);
@@ -23,22 +23,20 @@ function createApp(opt) {
     global = {};
   }
 
-  if (!global.registered) opt.models.forEach((model) => app.model(model));
-  global.registered = true;
+  if (!global.registered) {
+    global.registered = true;
+    opt.models.forEach((model) => app.model(model));
+  }
   app.start();
 
-  store = app._store;
-  app.getStore = () => store;
-
-  dispatch = store.dispatch;
-
-  app.dispatch = dispatch;
+  appStore = app._store;
+  app.getStore = () => appStore
   return app;
 }
 
-export default {
-  createApp,
-  getDispatch() {
-    return app.dispatch;
-  }
-};
+export function getAppStore(): {
+  dispatch: ConnectProps['dispatch'],
+  [other: string]: any
+} {
+  return appStore
+}

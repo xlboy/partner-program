@@ -26,45 +26,61 @@ export default <T = any>(options: OptionsType = { method: 'GET', data: {}, url: 
       delete options.data[key];
     }
   }
-  return Taro.request<T>({
-    url: baseUrl + options.url,
-    data: {
-      ...options.data
-    },
-    header: {
-      authorization: Taro.getStorageSync(StorageUserJWTKey),
-      'Content-Type': 'application/json'
-    },
-    method: options.method.toUpperCase() as keyof Taro.request.method
-  })
-    .then((res) => {
+  return new Promise(resolve => {
+    Taro.request<T>({
+      url: baseUrl + options.url,
+      data: {
+        ...options.data
+      },
+      header: {
+        authorization: Taro.getStorageSync(StorageUserJWTKey),
+        'Content-Type': 'application/json'
+      },
+      method: options.method.toUpperCase() as keyof Taro.request.method,
+      async success(res) {
+        const data = await successFailHandle(res)
+          .catch(title => Taro.showToast({ title, icon: 'none' }))
+        resolve(data)
+      },
+      async fail(res) {
+        await successFailHandle(res).catch(title => Taro.showToast({ title, icon: 'none' }))
+      }
+    })
+
+
+    /**
+     * @description Taro.request的在各端的行为不统一…特殊处理(原因：小程序端用的ajax,h5端用的fetch…)
+     * 服务器返回status状态码非200的情况下,H5/小程序会走进success与fail函数内…
+     */
+    async function successFailHandle(res) {
       setTimeout(() => {
         Taro.hideLoading();
       }, 100);
+      let { statusCode, status, data } = res
+
+      statusCode ??= status
+
       if (!noConsole) {
-        console.log(`${new Date().toLocaleString('zh', { hour12: false })}【${options.url} 】【返回】`, res.data);
+        console.log(`${new Date().toLocaleString('zh', { hour12: false })}【${options.url} 】【返回】`, data);
       }
-      return res.data;
-    })
-    .catch((error) => {
-      console.log('error', error)
-      if (error instanceof Response) {
-        const res = error
-        if (res.status > 200 && res.status < 300) {
-          return Promise.reject('请求资源不存在');
-        } else if (res.status === 500) {
-          return Promise.reject('服务端出现了问题');
-        } else if (res.status === 403) {
-          return Promise.reject('没有权限访问');
-        } else if (res.status === 401) {
-          Taro.showToast({ title: '账户已过期，请重新登陆', icon: 'none' })
-          Taro.setStorageSync(StorageUserJWTKey, '');
-          setTimeout(() => {
-            Taro.navigateTo({ url: '/pages/login/index' })
-          }, 500);
-          return Promise.reject('需要鉴权');
-        }
+
+      if (statusCode > 200 && statusCode < 300) {
+        return Promise.reject('请求资源不存在');
+      } else if (statusCode === 500) {
+        return Promise.reject('服务端出现了问题');
+      } else if (statusCode === 403) {
+        return Promise.reject('没有权限访问');
+      } else if (statusCode === 401) {
+        Taro.setStorageSync(StorageUserJWTKey, '');
+        setTimeout(() => {
+          Taro.navigateTo({ url: '/pages/login/index' })
+        }, 700);
+        return Promise.reject('请登陆');
+      } else if (statusCode === 200) {
+        return Promise.resolve(data)
+      } else {
+        return Promise.reject('未知错误')
       }
-      throw error;
-    });
+    }
+  })
 };

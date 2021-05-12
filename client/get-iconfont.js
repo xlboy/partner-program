@@ -105,7 +105,7 @@ getCanvasBase64(imgSrc)
   });
 
 
-void function () {
+(function () {
   utils('')
   const [chkImg] = document.getElementsByName('chkImg')
   chkImg.onload = () => {
@@ -131,7 +131,5 @@ void function () {
       script.id = 'loadScript';
       head.appendChild(script)
     }
-  },
-
-
-}()
+  }
+})();

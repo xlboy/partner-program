@@ -2,7 +2,7 @@ import { redisClient } from ".."
 
 /**
  * @description 计划组成员の哈希格式如下↓
- * [planGroupId: string]: string[];
+ * [planGroupNum: string]: string[];
  */
 
 const moduleKey = 'PlanGroupMembers-Key'

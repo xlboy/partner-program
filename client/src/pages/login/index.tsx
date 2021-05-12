@@ -1,34 +1,41 @@
 import React, { FC } from 'react';
 import { View, Text, Button } from '@tarojs/components';
 import './index.scss';
-import Taro from '@tarojs/taro';
-import { ConnectProps } from '@/models/connect';
-import { connect } from 'dva';
+import Taro, { login } from '@tarojs/taro';
+import { ConnectProps } from '@/models/typings/connect';
+import { connect } from 'react-redux';
 import { AtButton, AtInput } from 'taro-ui';
+import { mergeProvider } from '@/models';
+import { getAppStore } from '@/utils/dva';
+import { StateType } from '@/models/modules/userModel';
 
-interface IndexProps extends ConnectProps {
-  token: number;
+interface LoginProps {
   nickname: string;
 }
+interface LoginDispatch {
+  userLogin: (loginForm: { username: string, password: string }) => Promise<boolean>;
+  userReg: (loginForm: { username: string, password: string, nickname: string }) => Promise<boolean>;
+}
 
-const Index: FC<IndexProps> = (props) => {
-  const { dispatch, nickname } = props;
+const Login: FC<LoginProps & LoginDispatch> = (props) => {
+  const { userLogin, userReg } = props;
   const loginForm = {
     username: '',
     password: ''
   };
+
   return (
     <View className="index">
-      <AtInput name="value" title="用户名" type="text" placeholder="请输入登陆用户名" onChange={formChange.bind(null, 'username')} />
-      <AtInput name="value" title="密码" type="password" placeholder="请输入密码" onChange={formChange.bind(null, 'password')} />
-      <View className="at-row">
+      <AtInput name="username" title="用户名" type="text" placeholder="请输入登陆用户名" onChange={(val: string) => formChange('username', val)} />
+      <AtInput name="password" title="密码" type="password" placeholder="请输入密码" onChange={(val: string) => formChange('password', val)} />
+      <View className="at-row" style="margin-top: 20px;">
         <View className="at-col">
-          <AtButton type="primary" onClick={onLogin}>
+          <AtButton circle type="primary" onClick={() => submitForm('login')}>
             登陆
           </AtButton>
         </View>
         <View className="at-col">
-          <AtButton type="primary" onClick={onReg}>
+          <AtButton circle type="primary" onClick={() => submitForm('reg')}>
             注册
           </AtButton>
         </View>
@@ -40,21 +47,35 @@ const Index: FC<IndexProps> = (props) => {
     loginForm[changeKey] = val;
   }
 
-  async function onLogin() {
-    const isSuccess = await dispatch<boolean>({
-      type: 'user/login',
-      payload: loginForm
-    });
-    if (isSuccess) {
-      
+  function submitForm(action: 'reg' | 'login') {
+    const { username, password } = loginForm
+    if (username && password) {
+      if (action === 'reg') reg()
+      else login()
+    } else {
+      return Taro.showToast({ title: '账号或密码不可为空', icon: 'none' })
+    }
+
+    async function login() {
+      await userLogin(loginForm);
+    }
+
+    async function reg() {
+      await userReg({ ...loginForm, nickname: `卡夫卡${Math.floor(Math.random() * 500000)}` });
     }
   }
-
-  async function onReg() {}
 };
 
-export default connect((state) => {
-  return {
-    nickname: state.user.nickname
-  };
-})(Index);
+
+export default connect<LoginProps, LoginDispatch, {}, Store.DefaultRootState>(
+  state => ({
+    nickname: state.user.info.nickname
+  }),
+  (_dispatch: any) => {
+    const dispatch = _dispatch as ConnectProps['dispatch']
+    return {
+      userLogin: (...args) => dispatch({ type: 'user/login', payload: args[0] }),
+      userReg: (...args) => dispatch({ type: 'user/reg', payload: args[0] })
+    }
+  }
+)(Login)

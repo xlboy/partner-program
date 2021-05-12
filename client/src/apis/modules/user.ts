@@ -8,7 +8,12 @@ export const ApiUserLogin = (username: string, password: string) =>
     url: '/user/login',
     data: { username, password }
   });
-
+export const ApiUserReg = (username: string, password: string, nickname: string) =>
+  request<ApiFormat<ApiUserinfoResult>>({
+    method: 'GET',
+    url: '/user/reg',
+    data: { username, password, nickname }
+  });
 
 export const ApiGetUserinfo = () =>
   request<ApiFormat<ApiUserinfoResult>>({

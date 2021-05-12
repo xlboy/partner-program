@@ -1,3 +1,4 @@
+import path from 'path'
 const config = {
   projectName: 'taro-dva-ts',
   date: '2020-9-9',
@@ -8,7 +9,7 @@ const config = {
     828: 1.81 / 2
   },
   sourceRoot: 'src',
-  outputRoot: 'dist',
+  outputRoot:  `dist/${process.env.TARO_ENV}`,
   plugins: [],
   defineConstants: {},
   copy: {
@@ -35,6 +36,11 @@ const config = {
           generateScopedName: '[name]__[local]___[hash:base64:5]'
         }
       }
+    },
+    compile: {
+      include: [
+        path.resolve(__dirname, '..', 'src/static/images/icon_tab_chat.png')
+      ]
     }
   },
   h5: {

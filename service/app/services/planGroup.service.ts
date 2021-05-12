@@ -46,6 +46,11 @@ export default class PlanGroupService {
     return findResult[0] ?? false
   }
 
+  async findGroupId(groupId: number): Promise<PlanGroup | false> {
+    const findResult = await this.repository.find({ id: groupId })
+    return findResult[0] ?? false
+  }
+
   async verifGroupExist(planGroup: Pick<PlanGroup, 'groupNum'>): Promise<boolean> {
     const { groupNum } = planGroup
     const findResult = await this.repository.find({ groupNum })
