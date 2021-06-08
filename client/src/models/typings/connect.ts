@@ -1,16 +1,15 @@
-import { AllModelEffect } from '..';
-import { StateType as AccountState } from '../modules/chatModel';
+import { AllModelEffectTypePayload } from '.'
 
-export interface Loading {
-  global: boolean;
-  effects: { [key: string]: boolean | undefined };
-}
+type ModelEffectToAction<
+  ModelEffect extends AllModelEffectTypePayload,
+  K = keyof ModelEffect
+> = K extends keyof ModelEffect
+  ? {
+      type: K
+      payload: ModelEffect[K]
+    }
+  : never
 
 export interface ConnectProps {
-  dispatch: Store.ConnectDispatch<Store.AnyAction<any, AllModelEffect>>;
-}
-
-export interface ConnectState {
-  loading: Loading;
-  account: AccountState;
+  dispatch: (Action: ModelEffectToAction<AllModelEffectTypePayload>) => void
 }

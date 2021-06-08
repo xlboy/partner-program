@@ -20,22 +20,21 @@ export interface StateType {
       name: string;
       contentText: string;
       [other: string]: any;
-    }
-  } | null
+    };
+  } | null;
 }
 
 export interface ModelType {
   namespace: string;
   state: StateType;
-  reducerTypes: {
+  reducers: {
     SetChatSession: StateType['chatSession'];
-    SetLatestInfo: StateType['latestInfo']
-  },
-  effectTypes: {
+    SetLatestInfo: StateType['latestInfo'];
+  };
+  effects: {
     getHistorySession: any;
     newChatMsgHandle: MessageContent.GroupChat;
-  },
-  effects: {}
+  };
 }
 
 const modelNamespace = 'chat';
@@ -48,21 +47,21 @@ const modelCore: Store.Model<ModelType> = {
   },
   effects: {
     *getHistorySession({ payload }, { put }) {
-      const historyChatSession: undefined | StateType['chatSession'] = Taro.getStorageSync(StorageHistoryChatSessionKey)
+      const historyChatSession: undefined | StateType['chatSession'] = Taro.getStorageSync(StorageHistoryChatSessionKey);
       if (historyChatSession) {
-        console.log('有历史信息哦')
-        yield put({ type: 'SetChatSession', payload: historyChatSession })
+        console.log('有历史信息哦');
+        yield put({ type: 'SetChatSession', payload: historyChatSession });
       }
-      console.log('historyChatSession', historyChatSession)
+      console.log('historyChatSession', historyChatSession);
     },
     *newChatMsgHandle({ payload: messageContent }, { select, put }) {
-      const state = select()
-      const latestInfo = {
+      const state = select();
+      const latestInfo: StateType['latestInfo'] = {
         type: SocketContentType.GROUP_CHAT,
-        name: messageContent.groupId
-      }
-      yield put({ type: 'SetLatestInfo', payload: latestInfo })
-      console.log('来新信息啦')
+        content: messageContent.groupId
+      };
+      yield put({ type: 'SetLatestInfo', payload: latestInfo });
+      console.log('来新信息啦');
     }
   },
   reducers: {

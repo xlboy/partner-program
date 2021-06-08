@@ -5,46 +5,38 @@ import Taro from '@tarojs/Taro';
 import React, { FC, useEffect } from 'react';
 import { connect } from 'react-redux';
 
-interface MeProps {
-
-}
+interface MeProps {}
 
 interface MeDispatch {
-  logout: () => void
+  logout: () => void;
 }
 
-
 const Me: FC<MeProps & MeDispatch> = (props) => {
-  const { logout } = props
-  
+  const { logout } = props;
+
   useEffect(() => {
-    verifLogin()
-  }, [])
+    verifLogin();
+  }, []);
 
   return (
     <View className="index">
       老子是Me
-      <Button onClick={logout}>
-        退出
-      </Button>
+      <Button onClick={logout}>退出</Button>
     </View>
   );
 
   function verifLogin() {
-    const appStore = getAppStore()
+    const appStore = getAppStore();
     appStore.dispatch({
       payload: {},
       type: 'user/initUserinfo'
-    })
+    });
   }
 };
 
-export default connect<MeProps, MeDispatch, {}, Store.DefaultRootState>(
-  null,
-  (_dispatch: any) => {
-    const dispatch = _dispatch as ConnectProps['dispatch']
-    return {
-      logout: () => dispatch({ type: 'user/logout', payload: {} }),
-    }
-  }
-)(Me)
+export default connect<MeProps, MeDispatch, {}, Store.DefaultRootState>(null, (_dispatch: any) => {
+  const dispatch = _dispatch as ConnectProps['dispatch'];
+  return {
+    logout: () => dispatch({ type: 'user/logout', payload: {} })
+  };
+})(Me);
