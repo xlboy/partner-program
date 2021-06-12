@@ -1,13 +1,12 @@
-import { SocketContentType } from '@/constants/socket';
-import Taro from '@tarojs/taro';
-import connectSocket from './core/connectSocket';
-import messageHandle from './core/messageHandle';
-import { SocketType } from './typings';
-
+import { wsUrl } from '@/config'
+import { SocketContentType } from '@/constants/socket'
+import Taro from '@tarojs/taro'
+import connectSocket from './core/connectSocket'
+import messageHandle from './core/messageHandle'
+import { SocketType } from './typings'
 export default class AppSocket {
-  private url = 'ws://192.168.1.2:3000/chat';
-  // status:
-  private im: Taro.SocketTask;
+  private url = wsUrl
+  private im: Taro.SocketTask
 
   constructor(private readonly token: string) {}
 
@@ -16,9 +15,11 @@ export default class AppSocket {
       if (this.im !== undefined) {
         resolve(false)
       }
-      let ws = await connectSocket(`${this.url}?token=${this.token}`);
+      let ws = await connectSocket(`${this.url}?token=${this.token}`)
       if (ws) {
-        ws.onMessage(wsMessageHandle.bind(this, resolve, ws));
+        ws.onMessage(wsMessageHandle.bind(this, resolve, ws))
+      } else {
+        resolve(false)
       }
     })
 
@@ -29,8 +30,7 @@ export default class AppSocket {
       result: any
     ): void {
       try {
-        const data: SocketType.DataParams = JSON.parse(result.data);
-        console.log('data', data)
+        const data: SocketType.DataParams = JSON.parse(result.data)
         if (initLoginHandle(data)) {
           resolve(true)
           this.im = ws!
@@ -38,7 +38,7 @@ export default class AppSocket {
             try {
               messageHandle(JSON.parse(result.data) as SocketType.DataParams)
             } catch (error) {
-              Taro.showToast({ title: 'service ws params error' });
+              Taro.showToast({ title: 'service ws params error' })
             }
           })
           ws = null
@@ -46,25 +46,25 @@ export default class AppSocket {
           resolve(false)
         }
       } catch (error) {
-        Taro.showToast({ title: 'service ws params error' });
+        Taro.showToast({ title: 'service ws params error' })
       }
 
       function initLoginHandle(data: SocketType.DataParams): boolean {
         if (data.contentType === SocketContentType.SYSTEM) {
-          const isLoginContent = ['连接成功', 'token有误'].indexOf(data.content);
+          const isLoginContent = ['连接成功', 'token有误'].indexOf(data.content)
           if (isLoginContent !== -1) {
-            isLoginContent ? loginErrorHandle() : loginSuccessHandle();
-            return !isLoginContent;
+            isLoginContent ? loginErrorHandle() : loginSuccessHandle()
+            return !isLoginContent
           }
         }
         return false
 
         function loginSuccessHandle() {
-          Taro.showToast({ title: '连接成功啦' });
+          Taro.showToast({ title: '连接成功啦' })
         }
 
         function loginErrorHandle() {
-          Taro.showToast({ title: 'token有误…' });
+          Taro.showToast({ title: 'token有误…' })
         }
       }
     }

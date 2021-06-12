@@ -1,6 +1,4 @@
 import Taro, { getStorageSync } from '@tarojs/taro';
-import * as Api from '../../service/apiService';
-import AppSocket from '@/socket/appSocket';
 import { StorageHistoryChatSessionKey } from '@/constants/storage';
 import { MessageContent } from '@/socket/typings';
 import { SocketContentType } from '@/constants/socket';

@@ -1,52 +1,57 @@
-import { StorageUserJWTKey } from '@/constants/storage';
-import Taro from '@tarojs/taro';
-import { baseUrl, noConsole } from '../config';
-import interceptors from './interceptors';
-
-// j儿用，服务器报错都走不进去
-// interceptors.forEach((interceptorItem) => Taro.addInterceptor(interceptorItem));
+import { StorageUserJWTKey } from '@/constants/storage'
+import Taro from '@tarojs/taro'
+import { apiUrl, noConsole } from '../config'
 
 interface OptionsType {
-  method: 'GET' | 'POST' | 'PUT';
-  data?: any;
-  url: string;
-  noLoading?: boolean;
+  method: 'GET' | 'POST' | 'PUT'
+  data?: any
+  url: string
+  noLoading?: boolean
 }
-export default <T = any>(options: OptionsType = { method: 'GET', data: {}, url: '', noLoading: false }): Promise<T> => {
+export default <T = any>(
+  options: OptionsType = { method: 'GET', data: {}, url: '', noLoading: false }
+): Promise<T> => {
   if (!options.noLoading) {
     Taro.showLoading({
-      title: '加载中'
-    });
+      title: '加载中',
+    })
   }
   if (!noConsole) {
-    console.log(`${new Date().toLocaleString()}【 URL=${options.url} 】PARAM=${JSON.stringify(options.data)}`);
+    console.log(
+      `${new Date().toLocaleString()}【 URL=${options.url} 】PARAM=${JSON.stringify(options.data)}`
+    )
   }
   for (const key in options.data) {
-    if (options.data.hasOwnProperty(key) && (options.data[key] === undefined || options.data[key] == null)) {
-      delete options.data[key];
+    if (
+      options.data.hasOwnProperty(key) &&
+      (options.data[key] === undefined || options.data[key] == null)
+    ) {
+      delete options.data[key]
     }
   }
   return new Promise(resolve => {
     Taro.request<T>({
-      url: baseUrl + options.url,
+      url: apiUrl + options.url,
       data: {
-        ...options.data
+        ...options.data,
       },
       header: {
         authorization: Taro.getStorageSync(StorageUserJWTKey),
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       method: options.method.toUpperCase() as keyof Taro.request.method,
       async success(res) {
-        const data = await successFailHandle(res)
-          .catch(title => Taro.showToast({ title, icon: 'none' }))
-        resolve(data)
+        try {
+          const data = await successFailHandle(res)
+          resolve(data)
+        } catch (error) {
+          Taro.showToast({ title: error, icon: 'none' })
+        }
       },
       async fail(res) {
-        await successFailHandle(res).catch(title => Taro.showToast({ title, icon: 'none' }))
-      }
+        successFailHandle(res).catch(title => Taro.showToast({ title, icon: 'none' }))
+      },
     })
-
 
     /**
      * @description Taro.request的在各端的行为不统一…特殊处理(原因：小程序端用的ajax,h5端用的fetch…)
@@ -54,28 +59,31 @@ export default <T = any>(options: OptionsType = { method: 'GET', data: {}, url: 
      */
     async function successFailHandle(res) {
       setTimeout(() => {
-        Taro.hideLoading();
-      }, 100);
+        Taro.hideLoading()
+      }, 100)
       let { statusCode, status, data } = res
 
       statusCode ??= status
 
       if (!noConsole) {
-        console.log(`${new Date().toLocaleString('zh', { hour12: false })}【${options.url} 】【返回】`, data);
+        console.log(
+          `${new Date().toLocaleString('zh', { hour12: false })}【${options.url} 】【返回】`,
+          data
+        )
       }
 
       if (statusCode > 200 && statusCode < 300) {
-        return Promise.reject('请求资源不存在');
+        return Promise.reject('请求资源不存在')
       } else if (statusCode === 500) {
-        return Promise.reject('服务端出现了问题');
+        return Promise.reject('服务端出现了问题')
       } else if (statusCode === 403) {
-        return Promise.reject('没有权限访问');
+        return Promise.reject('没有权限访问')
       } else if (statusCode === 401) {
-        Taro.setStorageSync(StorageUserJWTKey, '');
+        Taro.setStorageSync(StorageUserJWTKey, '')
         setTimeout(() => {
           Taro.navigateTo({ url: '/pages/login/index' })
-        }, 700);
-        return Promise.reject('请登陆');
+        }, 700)
+        return Promise.reject('请登陆')
       } else if (statusCode === 200) {
         return Promise.resolve(data)
       } else {
@@ -83,4 +91,4 @@ export default <T = any>(options: OptionsType = { method: 'GET', data: {}, url: 
       }
     }
   })
-};
+}

@@ -1,15 +1,7 @@
-import { AllModelEffectTypePayload } from '.'
+import { AllModelEffectPayload } from '.'
+import { ModelEffectPayloadToAction } from './utils';
 
-type ModelEffectToAction<
-  ModelEffect extends AllModelEffectTypePayload,
-  K = keyof ModelEffect
-> = K extends keyof ModelEffect
-  ? {
-      type: K
-      payload: ModelEffect[K]
-    }
-  : never
 
 export interface ConnectProps {
-  dispatch: (Action: ModelEffectToAction<AllModelEffectTypePayload>) => void
+  dispatch: (action: ModelEffectPayloadToAction<AllModelEffectPayload>) => void
 }
