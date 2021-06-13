@@ -61,6 +61,9 @@ export default <T = any>(
       setTimeout(() => {
         Taro.hideLoading()
       }, 100)
+      if (res instanceof Error) {
+        return Promise.reject('服务端出现了问题')
+      }
       let { statusCode, status, data } = res
 
       statusCode ??= status

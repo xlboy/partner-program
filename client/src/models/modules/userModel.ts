@@ -77,13 +77,9 @@ const modelCore: Store.Model<ModelType> = {
         Taro.setStorageSync(StorageUserJWTKey, token)
         yield put({ type: 'SetUserinfo', payload: { ...loginResult.data! } })
         yield put.resolve({ type: 'connectSocket', payload: { token } })
-        console.log('我还要遇见几个你')
         setTimeout(() => {
           envRun()
-            .WEB(() => {
-              console.log('进来了啊')
-              Taro.navigateTo({ url: '/pages/me/index' })
-            })
+            .WEB(() => Taro.navigateTo({ url: '/pages/me/index' }))
             .WEAPP(() => Taro.switchTab({ url: '/pages/me/index' }))
         }, 500)
       } else {
@@ -107,9 +103,7 @@ const modelCore: Store.Model<ModelType> = {
     *connectSocket({ payload }, { call, put }) {
       const { token } = payload
       const im = new AppSocket(token)
-      const connectResult = yield call(async () => {
-        await im.initConnect()
-      })
+      const connectResult = yield call(async () => await im.initConnect())
       if (connectResult) {
         yield put({ type: 'SetIM', payload: { im } })
       }
@@ -121,12 +115,11 @@ const modelCore: Store.Model<ModelType> = {
       })
       Taro.setStorageSync(StorageUserJWTKey, '')
       Taro.showToast({ title: '退出成功', icon: 'none' })
-      const { user } = select()
+      const { user } = (yield select()) as Store.RootState
       user.im?.closeConnect()
-      yield 
-      // setTimeout(() => {
-      //   Taro.navigateTo({ url: '/pages/login/index' })
-      // }, 600)
+      setTimeout(() => {
+        Taro.navigateTo({ url: '/pages/login/index' })
+      }, 600)
     },
   },
   reducers: {

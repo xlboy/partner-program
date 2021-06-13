@@ -9,12 +9,13 @@ interface MeProps {}
 
 interface MeDispatch {
   logout: () => void
+  initUserinfo: () => void
 }
 
 const Me: React.FC<MeProps & MeDispatch> = props => {
-  const { logout } = props
+  const { logout, initUserinfo } = props
   useEffect(() => {
-    verifLogin()
+    initUserinfo()
   }, [])
 
   return (
@@ -24,18 +25,12 @@ const Me: React.FC<MeProps & MeDispatch> = props => {
     </View>
   )
 
-  function verifLogin() {
-    const appStore = getAppStore()
-    appStore.dispatch({
-      payload: {},
-      type: 'user/initUserinfo',
-    })
-  }
 }
 
 export default connect<MeProps, MeDispatch>(null, (dispatch: any) => {
   const rootDispatch = dispatch as Store.RootDispatch
   return {
     logout: () => rootDispatch({ type: 'user/logout', payload: {} }),
+    initUserinfo: () => rootDispatch({ type: 'user/initUserinfo', payload: {} }),
   }
 })(Me)
