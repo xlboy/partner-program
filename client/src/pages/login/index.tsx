@@ -1,13 +1,9 @@
 import React, { FC } from 'react'
 import { View, Text, Button } from '@tarojs/components'
 import './index.scss'
-import Taro, { login } from '@tarojs/taro'
-import { ConnectProps } from '@/models/typings/connect'
+import Taro from '@tarojs/taro'
 import { connect } from 'react-redux'
 import { AtButton, AtInput } from 'taro-ui'
-import { mergeProvider } from '@/models'
-import { getAppStore } from '@/utils/dva'
-import { StateType } from '@/models/modules/userModel'
 
 interface LoginProps {
   nickname: string
@@ -73,7 +69,7 @@ const Login: FC<LoginProps & LoginDispatch> = props => {
     }
 
     async function reg() {
-      await userReg({ ...loginForm, nickname: `卡夫卡${Math.floor(Math.random() * 500000)}` })
+      await userReg({ ...loginForm, nickname: `加油吧少年${Math.floor(Math.random() * 500000)}` })
     }
   }
 }

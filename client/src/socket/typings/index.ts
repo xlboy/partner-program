@@ -1,4 +1,4 @@
-import { ApiUserinfoResult } from '@/apis/typings/user';
+import { APIiUserinfoResult } from '@/apis/typings/user';
 import { SocketContentType } from '@/constants/socket';
 
 export namespace SocketType {
@@ -12,6 +12,6 @@ export namespace MessageContent {
     export interface GroupChat {
         groupId: number;
         message: string;
-        sender: ApiUserinfoResult
+        sender: APIiUserinfoResult
     }
 }

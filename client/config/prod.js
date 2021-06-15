@@ -1,6 +1,5 @@
 const path = require('path');
 
-console.log('当爱情只剩眼睛，少了耳朵，就变的你只看到你怕看的', path.resolve(__dirname, '..', 'src/'))
 module.exports = {
   env: {
     NODE_ENV: '"production"',

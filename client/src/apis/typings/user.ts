@@ -1,6 +1,6 @@
 import { APIPlanGroup } from "./planGroup";
 
-export interface ApiUserinfoResult {
+export interface APIiUserinfoResult {
   username: string;
   nickname: string;
   sex: boolean;
@@ -8,9 +8,4 @@ export interface ApiUserinfoResult {
   age: null | number;
   email: null | string;
   avatar: string;
-}
-
-export interface APIUserPlanGroupList {
-  myGroup: APIPlanGroup[],
-  otherGroup: APIPlanGroup[]
 }

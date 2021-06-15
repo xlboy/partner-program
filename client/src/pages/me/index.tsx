@@ -1,5 +1,6 @@
 import { ConnectProps } from '@/models/typings/connect'
 import { getAppStore } from '@/utils/dva'
+import envRun from '@/utils/envRun'
 import { View, Text, Button } from '@tarojs/components'
 import Taro from '@tarojs/Taro'
 import React, { useEffect } from 'react'
@@ -16,6 +17,9 @@ const Me: React.FC<MeProps & MeDispatch> = props => {
   const { logout, initUserinfo } = props
   useEffect(() => {
     initUserinfo()
+    envRun().WEAPP(() => {
+      document.title = '我的资料'
+    })
   }, [])
 
   return (
@@ -24,7 +28,6 @@ const Me: React.FC<MeProps & MeDispatch> = props => {
       <Button onClick={logout}>退出</Button>
     </View>
   )
-
 }
 
 export default connect<MeProps, MeDispatch>(null, (dispatch: any) => {

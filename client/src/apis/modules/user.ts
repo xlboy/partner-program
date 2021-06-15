@@ -1,29 +1,22 @@
 import request from '@/utils/request';
-import { ApiFormat } from '../typings/public';
-import { ApiUserinfoResult, APIUserPlanGroupList } from '../typings/user';
+import { APIFormat } from '../typings/public';
+import { APIiUserinfoResult } from '../typings/user';
 
-export const ApiUserLogin = (username: string, password: string) =>
-  request<ApiFormat<ApiUserinfoResult>>({
-    method: 'GET',
+export const APIUserLogin = (username: string, password: string) =>
+  request<APIFormat<APIiUserinfoResult>>({
+    method: 'POST',
     url: '/user/login',
     data: { username, password }
   });
-export const ApiUserReg = (username: string, password: string, nickname: string) =>
-  request<ApiFormat<ApiUserinfoResult>>({
-    method: 'GET',
+export const APIUserReg = (username: string, password: string, nickname: string) =>
+  request<APIFormat<APIiUserinfoResult>>({
+    method: 'POST',
     url: '/user/reg',
     data: { username, password, nickname }
   });
 
-export const ApiGetUserinfo = () =>
-  request<ApiFormat<ApiUserinfoResult>>({
+export const APIGetUserinfo = () =>
+  request<APIFormat<APIiUserinfoResult>>({
     method: 'GET',
     url: '/user/getUserinfo'
-  });
-
-
-export const ApiGetUserPlanGroupList = () =>
-  request<ApiFormat<APIUserPlanGroupList>>({
-    method: 'GET',
-    url: '/plan-group/getPlanGroupList'
   });

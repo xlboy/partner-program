@@ -1,14 +1,14 @@
 import Taro, { getStorageSync } from '@tarojs/taro'
 // import * as Api from '../service/apiService';
 import AppSocket from '@/socket/appSocket'
-import { ApiGetUserinfo, ApiUserLogin, ApiUserReg } from '@/apis/modules/user'
-import { ApiFormat } from '@/apis/typings/public'
-import { ApiUserinfoResult } from '@/apis/typings/user'
+import { APIGetUserinfo, APIUserLogin, APIUserReg } from '@/apis/modules/user'
+import { APIFormat } from '@/apis/typings/public'
+import { APIiUserinfoResult } from '@/apis/typings/user'
 import { StorageUserJWTKey } from '@/constants/storage'
 import _ from 'loadsh'
 import envRun from '@/utils/envRun'
 export interface StateType {
-  info: ApiUserinfoResult & { token: string }
+  info: APIiUserinfoResult & { token: string }
   im: AppSocket | null
 }
 
@@ -55,7 +55,7 @@ const modelCore: Store.Model<ModelType> = {
   effects: {
     *initUserinfo({}, { call, put }) {
       const userinfo: StateType['info'] = yield call(async () => {
-        const result = await ApiGetUserinfo()
+        const result = await APIGetUserinfo()
         return result.data
       })
       if (userinfo) {
@@ -70,7 +70,9 @@ const modelCore: Store.Model<ModelType> = {
     },
     *login({ payload }, { call, put }) {
       const { username, password } = payload
-      const loginResult: ApiFormat<StateType['info']> = yield call(ApiUserLogin, username, password)
+      const loginResult: APIFormat<StateType['info']> = yield call(() =>
+        APIUserLogin(username, password).catch(res => res)
+      )
       if (loginResult.code === 200) {
         const { token } = loginResult.data!
         Taro.showToast({ title: '登陆成功', icon: 'none' })
@@ -88,8 +90,8 @@ const modelCore: Store.Model<ModelType> = {
     },
     *reg({ payload }, { call }) {
       const { username, password, nickname } = payload
-      const regResult: ApiFormat<StateType['info']> = yield call(
-        ApiUserReg,
+      const regResult: APIFormat<StateType['info']> = yield call(
+        APIUserReg,
         username,
         password,
         nickname

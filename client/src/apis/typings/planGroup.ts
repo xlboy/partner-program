@@ -5,3 +5,7 @@ export interface APIPlanGroup {
     isnotify: boolean;
     groupNum: number;
 }
+export interface APIUserPlanGroupList {
+  myGroup: APIPlanGroup[],
+  otherGroup: APIPlanGroup[]
+}

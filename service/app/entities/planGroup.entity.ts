@@ -39,6 +39,11 @@ export default class PlanGroup extends BaseEntity {
   })
   isNotify?: boolean;
 
+  @Column({
+    default: 'http://q1.qlogo.cn/g?b=qq&nk=52852983&s=640'
+  })
+  avatar?: string;
+
   @Column()
   groupNum?: number;
 
