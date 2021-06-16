@@ -5,21 +5,17 @@ import { View, Text, Button } from '@tarojs/components'
 import Taro from '@tarojs/Taro'
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
-
+const appConfig = require('@/app.config') as AppConfig
 interface MeProps {}
-
 interface MeDispatch {
   logout: () => void
   initUserinfo: () => void
 }
-
 const Me: React.FC<MeProps & MeDispatch> = props => {
   const { logout, initUserinfo } = props
   useEffect(() => {
+    console.log('appConfig', )
     initUserinfo()
-    envRun().WEAPP(() => {
-      document.title = '我的资料'
-    })
   }, [])
 
   return (

@@ -1,0 +1,1 @@
+export default () => require('@/app.config').default as AppConfig

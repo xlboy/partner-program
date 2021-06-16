@@ -1,11 +1,10 @@
-import { Provider } from 'react-redux';
-import { createApp } from './utils/dva';
-import models from './models';
-import 'taro-ui/dist/style/index.scss';
-import './app.scss';
-import './static/iconfont/iconfont.scss';
-import { FC } from '@tarojs/taro';
-import React from 'react';
+import { Provider } from 'react-redux'
+import { createApp } from './utils/dva'
+import models from './models'
+import 'taro-ui/dist/style/index.scss'
+import './app.scss'
+import './static/iconfont/iconfont.scss'
+import React from 'react'
 
 // 如果需要在 h5 环境中开启 React Devtools
 // 取消以下注释：
@@ -14,9 +13,10 @@ import React from 'react';
 // }
 const app = createApp({
   initialState: {},
-  models
-});
+  models,
+})
 const store = app.getStore()
 
-const App: FC = (props) => <Provider store={store}>{props.children}</Provider>;
-export default App;
+const App: React.FC = props => <Provider store={store}>{props.children}</Provider>
+
+export default App

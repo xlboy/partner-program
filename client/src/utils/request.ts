@@ -12,7 +12,6 @@ interface OptionsType {
 export default <T extends APIFormat>(
   options: OptionsType = { method: 'GET', data: {}, url: '', noLoading: false }
 ): Promise<T> => {
-  console.dir('Taro', typeof Taro)
   if (!options.noLoading) {
     Taro.showLoading({
       title: '加载中',

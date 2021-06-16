@@ -1,8 +1,17 @@
 import envRun from '@/utils/envRun'
+import getAppConfig from '@/utils/getAppConfig'
 import { View, Text } from '@tarojs/components'
-import Taro from '@tarojs/taro'
+import Taro, { getApp } from '@tarojs/taro'
 import React, { useEffect, useState } from 'react'
-import { AtActionSheet, AtActionSheetItem, AtFab, AtListItem } from 'taro-ui'
+import {
+  AtActionSheet,
+  AtActionSheetItem,
+  AtButton,
+  AtFab,
+  AtListItem,
+  AtModal,
+  AtModalContent,
+} from 'taro-ui'
 import './index.scss'
 const Index: React.FC = () => {
   useEffect(() => {
@@ -20,22 +29,26 @@ const Index: React.FC = () => {
         thumb='http://img12.360buyimg.com/jdphoto/s72x72_jfs/t10660/330/203667368/1672/801735d7/59c85643N31e68303.png'
       /> */}
       <FloatAddBtn />
-      <AtActionSheet isOpened>
-        <AtActionSheetItem>按钮一</AtActionSheetItem>
-        <AtActionSheetItem>按钮二</AtActionSheetItem>
-      </AtActionSheet>
     </View>
   )
 
   function FloatAddBtn(): JSX.Element {
     return (
-      <AtFab size='normal' className='float-btn__add' onClick={toAddGroupPage}>
-        <Text className='at-fab__icon at-icon at-icon-add'></Text>
-      </AtFab>
+      <>
+        <AtModal isOpened>
+          <AtModalContent>
+            <AtButton>创建小组</AtButton>
+            <AtButton customStyle={{ marginTop: '3px' }}>搜索小组</AtButton>
+          </AtModalContent>
+        </AtModal>
+        <AtFab size='normal' className='float-btn__add' onClick={toAddGroupPage}>
+          <Text className='at-fab__icon at-icon at-icon-add'></Text>
+        </AtFab>
+      </>
     )
   }
   function toAddGroupPage(): void {
-    Taro.navigateTo({ url: '/pages/addGroup/index' })
+    Taro.navigateTo({ url: getAppConfig().AllPage.AddGroup })
   }
 }
 

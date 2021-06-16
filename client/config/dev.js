@@ -9,6 +9,7 @@ module.exports = {
     esnextModules: ['taro-ui']
   },
   alias: {
-    '@': path.resolve(__dirname, '..', 'src/')
+    '@': path.resolve(__dirname, '..', 'src/'),
+    'appConfig': path.resolve(__dirname, '..', 'src/app.config.js')
   }
 };
