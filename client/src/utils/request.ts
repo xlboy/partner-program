@@ -2,6 +2,7 @@ import { APIFormat } from '@/apis/typings/public'
 import { StorageUserJWTKey } from '@/constants/storage'
 import Taro from '@tarojs/taro'
 import { apiUrl, noConsole } from '../config'
+import getAppConfig from './getAppConfig'
 
 interface OptionsType {
   method: 'GET' | 'POST' | 'PUT'
@@ -85,7 +86,7 @@ export default <T extends APIFormat>(
       } else if (statusCode === 401) {
         Taro.setStorageSync(StorageUserJWTKey, '')
         setTimeout(() => {
-          Taro.navigateTo({ url: '/pages/login/index' })
+          Taro.navigateTo({ url: getAppConfig().AllPage.Login })
         }, 700)
         return Promise.reject('请登陆')
       } else if (statusCode === 200) {

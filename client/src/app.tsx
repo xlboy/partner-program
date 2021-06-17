@@ -1,6 +1,6 @@
 import { Provider } from 'react-redux'
 import { createApp } from './utils/dva'
-import models from './models'
+import models from './store'
 import 'taro-ui/dist/style/index.scss'
 import './app.scss'
 import './static/iconfont/iconfont.scss'

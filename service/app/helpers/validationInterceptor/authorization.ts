@@ -7,7 +7,6 @@ import resultFormat from '../resultFormat'
 export default function (...args: any[]) {
     return function (context: any, next: (err?: any) => Promise<any>): any {
         const authorization: string = context.request.header.authorization
-        console.log('authorization', authorization)
         if (verifUserJWT(authorization)) {
             return next()
         } else {

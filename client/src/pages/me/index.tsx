@@ -1,4 +1,4 @@
-import { ConnectProps } from '@/models/typings/connect'
+import { ConnectProps } from '@/store/typings/connect'
 import { getAppStore } from '@/utils/dva'
 import envRun from '@/utils/envRun'
 import { View, Text, Button } from '@tarojs/components'

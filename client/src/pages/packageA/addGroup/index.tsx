@@ -2,7 +2,7 @@ import React, { FC, useEffect, useMemo, useState } from 'react'
 import { View, Text, Button } from '@tarojs/components'
 import './index.scss'
 import Taro, { login } from '@tarojs/taro'
-import { AtListItem, AtSearchBar } from 'taro-ui'
+import { AtDivider, AtListItem, AtSearchBar } from 'taro-ui'
 import { APISearchPlantGroup } from '@/apis/modules/plantGroup'
 
 const AddGroup: FC = () => {
@@ -27,7 +27,7 @@ const AddGroup: FC = () => {
         onActionClick={searchBtnClick}
       />
       <View className='search-result'>
-        {isNotSearchResult && <Text>暂无搜索结果</Text>}
+        {isNotSearchResult && <AtDivider className='search-result__not' content='暂无搜索结果' />}
         {!isNotSearchResult &&
           state.searchResult.map(item => (
             <AtListItem
@@ -46,7 +46,14 @@ const AddGroup: FC = () => {
 
   async function searchBtnClick(): Promise<void> {
     const searchResult = await APISearchPlantGroup(state.searchVal)
-    
+    const { isFindGroupNum, result } = searchResult.data!
+    if (isFindGroupNum) {
+      console.log('直接搜到这个群号了，跳转到资料页')
+    } else {
+      if (result.length === 0) {
+        setState(state => ({ ...state, hasSearch: true, searchResult: [] }))
+      }
+    }
   }
 }
 

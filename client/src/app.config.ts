@@ -1,11 +1,12 @@
 const MainPages = {
   Me: 'pages/me/index',
-  Login: 'pages/login/index',
   Groups: 'pages/groups/index',
   Chats: 'pages/chats/index',
 } as const
 const PackagePages = {
   AddGroup: 'pages/packageA/addGroup/index',
+  CreateGroup: 'pages/packageA/createGroup/index',
+  Login: 'pages/packageA/login/index',
 } as const
 
 const appConfig = {

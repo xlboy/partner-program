@@ -1,11 +1,16 @@
 export interface APIPlanGroup {
-    id: number;
-    introduce: string;
-    groupName: string;
-    isnotify: boolean;
-    groupNum: number;
+  id: number
+  introduce: string
+  groupName: string
+  isnotify: boolean
+  groupNum: number
 }
 export interface APIUserPlanGroupList {
-  myGroup: APIPlanGroup[],
+  myGroup: APIPlanGroup[]
   otherGroup: APIPlanGroup[]
+}
+
+export interface APISearchPlantGroup {
+  isFindGroupNum: boolean
+  result: any[]
 }

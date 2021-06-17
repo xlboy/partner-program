@@ -1,7 +1,5 @@
-import * as chatModel from '@/models/modules/chatModel'
-import * as userModel from '@/models/modules/userModel'
-import { AllModelEffectPayload, AllModelState } from '@/models/typings'
-import { ModelEffectPayloadToAction } from '@/models/typings/utils'
+import { AllModelEffectPayload, AllModelState } from '@/store/typings'
+import { ModelEffectPayloadToAction } from '@/store/typings/utils'
 import { EffectType, SubscriptionsMapObject } from 'dva'
 
 

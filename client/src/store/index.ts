@@ -1,5 +1,5 @@
-import chatModel from "./modules/chatModel";
-import userModel from "./modules/userModel";
+import chatModel from "./modules/chat";
+import userModel from "./modules/user";
 
 export const allModel = {
   [userModel.namespace]: userModel,

@@ -10,14 +10,10 @@ import {
   HeaderParam,
   JsonController,
   Post,
-  QueryParam,
-  QueryParams,
-  Req,
   UseBefore,
 } from "routing-controllers";
 import { Inject } from "typedi";
 import { generateUserJWT, getUserinfoJWTFormat } from "app/helpers/jwt";
-import { Request } from "koa";
 import validationInterceptor from "app/helpers/validationInterceptor";
 @JsonController()
 export class UserinfoController {

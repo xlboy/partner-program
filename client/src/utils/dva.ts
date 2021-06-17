@@ -1,4 +1,4 @@
-import { ConnectProps } from '@/models/typings/connect';
+import { ConnectProps } from '@/store/typings/connect';
 import Taro from '@tarojs/taro';
 import { create } from 'dva-core';
 import createLoading from 'dva-loading';

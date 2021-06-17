@@ -1,3 +1,3 @@
 export default {
-  navigationBarTitleText: '添加小组',
+  navigationBarTitleText: '创建小组',
 } as Taro.CommonPageConfig

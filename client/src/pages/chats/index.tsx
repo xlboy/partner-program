@@ -33,22 +33,36 @@ const Index: React.FC = () => {
   )
 
   function FloatAddBtn(): JSX.Element {
+    const [isShow, setIsShow] = useState<boolean>(false)
     return (
       <>
-        <AtModal isOpened>
-          <AtModalContent>
-            <AtButton>创建小组</AtButton>
-            <AtButton customStyle={{ marginTop: '3px' }}>搜索小组</AtButton>
-          </AtModalContent>
-        </AtModal>
-        <AtFab size='normal' className='float-btn__add' onClick={toAddGroupPage}>
+        {isShow && (
+          <AtModal isOpened onClose={() => setIsShow(false)}>
+            <AtModalContent>
+              <AtButton onClick={() => toAddOrCreateGroupPage('create')}>创建小组</AtButton>
+              <AtButton
+                onClick={() => toAddOrCreateGroupPage('add')}
+                customStyle={{ marginTop: '3px' }}
+              >
+                搜索小组
+              </AtButton>
+            </AtModalContent>
+          </AtModal>
+        )}
+
+        <AtFab size='normal' className='float-btn__add' onClick={() => setIsShow(true)}>
           <Text className='at-fab__icon at-icon at-icon-add'></Text>
         </AtFab>
       </>
     )
-  }
-  function toAddGroupPage(): void {
-    Taro.navigateTo({ url: getAppConfig().AllPage.AddGroup })
+    function toAddOrCreateGroupPage(type: 'add' | 'create'): void {
+      setIsShow(false)
+      const pageMap: Record<typeof type, string> = {
+        add: getAppConfig().AllPage.AddGroup,
+        create: getAppConfig().AllPage.CreateGroup,
+      }
+      Taro.navigateTo({ url: pageMap[type] })
+    }
   }
 }
 

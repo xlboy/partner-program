@@ -7,6 +7,7 @@ import { APIiUserinfoResult } from '@/apis/typings/user'
 import { StorageUserJWTKey } from '@/constants/storage'
 import _ from 'loadsh'
 import envRun from '@/utils/envRun'
+import getAppConfig from '@/utils/getAppConfig'
 export interface StateType {
   info: APIiUserinfoResult & { token: string }
   im: AppSocket | null
@@ -120,7 +121,7 @@ const modelCore: Store.Model<ModelType> = {
       const { user } = (yield select()) as Store.RootState
       user.im?.closeConnect()
       setTimeout(() => {
-        Taro.navigateTo({ url: '/pages/login/index' })
+        Taro.navigateTo({ url: getAppConfig().AllPage.Login })
       }, 600)
     },
   },

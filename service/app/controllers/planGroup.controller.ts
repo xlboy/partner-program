@@ -1,10 +1,11 @@
 import resultFormat from "app/helpers/resultFormat";
 import {
+  Body,
   Get,
   HeaderParam,
   JsonController,
+  Post,
   QueryParam,
-  QueryParams,
   Req,
   UseBefore,
 } from "routing-controllers";
@@ -23,11 +24,11 @@ export class PlanGroupController {
   planGroupService: PlanGroupService;
   constructor() {}
 
-  @Get("/plan-group/create")
+  @Post("/plan-group/create")
   @UseBefore(validationInterceptor("USER_AUTHORIZE"))
   async create(
-    @QueryParams() planGroup: PlanGroup,
-    @Req() req: Request
+    @Body() planGroup: PlanGroup,
+    @HeaderParam("authorization") authorization: string
   ): Promise<Result.Format> {
     try {
       await validateEntity(planGroup);
@@ -36,7 +37,6 @@ export class PlanGroupController {
     }
 
     try {
-      const authorization = req.req.headers.authorization;
       const { id: founderId } = getUserinfoJWTFormat(authorization);
       return await this.planGroupService.create(planGroup, founderId);
     } catch (error) {
