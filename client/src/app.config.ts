@@ -6,6 +6,7 @@ const MainPages = {
 const PackagePages = {
   AddGroup: 'pages/packageA/addGroup/index',
   CreateGroup: 'pages/packageA/createGroup/index',
+  GroupInfo: 'pages/packageA/groupInfo/index',
   Login: 'pages/packageA/login/index',
 } as const
 
