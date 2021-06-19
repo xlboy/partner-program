@@ -2,8 +2,10 @@ export interface APIPlanGroup {
   id: number
   introduce: string
   groupName: string
-  isnotify: boolean
+  isNotify: boolean
   groupNum: number
+  avatar: string
+  userinfos: number[]
 }
 export interface APIUserPlanGroupList {
   myGroup: APIPlanGroup[]
@@ -12,5 +14,5 @@ export interface APIUserPlanGroupList {
 
 export interface APISearchPlantGroup {
   isFindGroupNum: boolean
-  result: any[]
+  result: APIPlanGroup[]
 }

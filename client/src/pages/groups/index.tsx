@@ -1,34 +1,23 @@
-import { APIGetUserPlanGroupList } from '@/apis/modules/plantGroup'
-import { APIPlanGroup } from '@/apis/typings/planGroup'
-import { APIUserPlanGroupList } from '@/apis/typings/planGroup'
-import { View, Text } from '@tarojs/components'
+import { View } from '@tarojs/components'
 import Taro from '@tarojs/taro'
-import React, { useEffect, useRef, useState } from 'react'
-import { AtIndexes, AtTabs, AtTabsPane } from 'taro-ui'
-import { ListItem } from 'taro-ui/types/indexes'
+import React, { useRef, useState } from 'react'
+import { AtListItem, AtTabs, AtTabsPane } from 'taro-ui'
 import { TabItem } from 'taro-ui/types/tabs'
-import C2Pin from 'c2pin'
+import { connect } from 'react-redux'
+import { APIPlanGroup } from '@/apis/typings/planGroup'
+import getAppConfig from '@/utils/getAppConfig'
 
+interface GroupsStoreProps {
+  userGroup: Store.RootState['user']['group']
+}
 
-const Groups: React.FC = () => {
-  const [userPlantGroup, setUserPlantGroup] = useState<APIUserPlanGroupList | null>(null)
+const Groups: React.FC<GroupsStoreProps> = props => {
+  const { userGroup } = props
   const [currentTab, setCurrentTab] = useState<number>(0)
-  const tabList = useRef<(TabItem & { plantGroupKey: keyof APIUserPlanGroupList })[]>([
-    { title: '我管理的', plantGroupKey: 'myGroup' },
-    { title: '我加入的', plantGroupKey: 'otherGroup' },
+  const tabList = useRef<(TabItem & { plantGroupKey: keyof typeof userGroup })[]>([
+    { title: '我管理的', plantGroupKey: 'my' },
+    { title: '我加入的', plantGroupKey: 'other' },
   ])
-
-  useEffect(() => {
-    APIGetUserPlanGroupList().then(res => {
-      setUserPlantGroup(res.data!)
-      convertPlantGroup(res.data!.myGroup)
-      function convertPlantGroup(plantGroupList: APIPlanGroup[]): ListItem[] {
-        plantGroupList.forEach(item => {
-          console.log('C2Pin', C2Pin.firstChar(item.groupName))
-        })
-      }
-    })
-  }, [])
 
   return (
     <View className='index'>
@@ -36,20 +25,35 @@ const Groups: React.FC = () => {
         {tabList.current.map((tab, index) => {
           return (
             <AtTabsPane current={currentTab} index={index}>
-              <View style='padding: 100px 50px;background-color: #FAFBFC;text-align: center;'>
-                {userPlantGroup && <AtIndexes list={userPlantGroup[tab.plantGroupKey]} />}
-              </View>
+              {userGroup[tab.plantGroupKey].map(info => (
+                <AtListItem
+                  title={info.groupName}
+                  thumb={info.avatar}
+                  onClick={() => toGroupInfoPage(info)}
+                />
+              ))}
+              {userGroup[tab.plantGroupKey].length === 0 && (
+                <vant-empty image='search' description='快去添加小组吧！' />
+              )}
             </AtTabsPane>
           )
         })}
       </AtTabs>
-      {/*  */}
     </View>
   )
+
+  function toGroupInfoPage(groupInfo: APIPlanGroup): void {
+    Taro.navigateTo({ url: `${getAppConfig().AllPage.GroupInfo}?id=${groupInfo.id}` })
+  }
 
   function switchTab(index: number): void {
     setCurrentTab(index)
   }
 }
 
-export default Groups
+export default connect<GroupsStoreProps>(state => {
+  const rootState = state as Store.RootState
+  return {
+    userGroup: rootState.user.group,
+  }
+})(Groups)

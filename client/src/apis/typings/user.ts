@@ -1,11 +1,12 @@
-import { APIPlanGroup } from "./planGroup";
+import { APIPlanGroup } from './planGroup'
 
 export interface APIiUserinfoResult {
-  username: string;
-  nickname: string;
-  sex: boolean;
-  token: string;
-  age: null | number;
-  email: null | string;
-  avatar: string;
+  id: number | null
+  username: string
+  nickname: string
+  sex: boolean
+  token: string
+  age: null | number
+  email: null | string
+  avatar: string
 }

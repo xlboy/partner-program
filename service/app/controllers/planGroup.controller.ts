@@ -98,8 +98,8 @@ export class PlanGroupController {
       if (findGroupNumResult) {
         findResult.isFindGroupNum = true;
         findResult.result = [findGroupNumResult];
-      } else findGroupNameKeys();
-    } else findGroupNameKeys();
+      } else await findGroupNameKeys();
+    } else await findGroupNameKeys();
 
     return resultFormat.success({ msg: "ok", data: findResult });
   }

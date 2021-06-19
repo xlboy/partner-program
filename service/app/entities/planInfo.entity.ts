@@ -65,6 +65,6 @@ export default class PlanInfo extends BaseEntity {
   @ManyToOne(() => Userinfo, userinfo => userinfo.planInfo)
   userinfo: Userinfo;
 
-  @ManyToOne(() => PlanGroup, planGroup => planGroup.planInfo)
+  @ManyToOne(() => PlanGroup, planGroup => planGroup.planInfos)
   planGroup: PlanGroup;
 }

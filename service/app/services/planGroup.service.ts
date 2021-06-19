@@ -22,7 +22,7 @@ export default class PlanGroupService {
         groupName,
         introduce,
         founder: founderInfo,
-        userinfo: [founderInfo],
+        userinfos: [founderInfo],
       });
 
       planGroup.groupNum = await (async () => {
@@ -54,7 +54,12 @@ export default class PlanGroupService {
   }
 
   findPlantGroupName(groupName: string): Promise<PlanGroup[]> {
-    return this.repository.find({ groupName: Like(`%${groupName}%`) });
+    return this.repository.find({
+      relations: ["userinfos"],
+      where: {
+        groupName: Like(`%${groupName}%`),
+      },
+    });
   }
 
   async findGroupId(groupId: number): Promise<PlanGroup | false> {

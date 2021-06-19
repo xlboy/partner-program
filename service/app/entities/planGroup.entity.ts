@@ -51,9 +51,9 @@ export default class PlanGroup extends BaseEntity {
   founder: Userinfo
 
   @OneToMany(() => PlanInfo, planInfo => planInfo.planGroup)
-  planInfo: PlanInfo[];
+  planInfos: PlanInfo[];
 
   @ManyToMany(() => Userinfo, userinfo => userinfo.planGroup)
   @JoinTable()
-  userinfo: Userinfo[];
+  userinfos: Userinfo[];
 }

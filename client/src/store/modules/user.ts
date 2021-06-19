@@ -8,9 +8,13 @@ import { StorageUserJWTKey } from '@/constants/storage'
 import _ from 'loadsh'
 import envRun from '@/utils/envRun'
 import getAppConfig from '@/utils/getAppConfig'
+import { APIPlanGroup } from '@/apis/typings/planGroup'
+import { APIGetUserPlanGroupList } from '@/apis/modules/plantGroup'
+import apiErrorListener from '@/apis/utils/apiErrorListener'
 export interface StateType {
   info: APIiUserinfoResult & { token: string }
   im: AppSocket | null
+  group: Record<'my' | 'other', APIPlanGroup[]>
 }
 
 interface ModelType {
@@ -29,16 +33,19 @@ interface ModelType {
     }
     connectSocket: { token: string }
     logout: {}
+    initUserGroup: {}
   }
   reducers: {
-    SetIM: Pick<StateType, 'im'>
+    SetIM: StateType['im']
     SetUserinfo: StateType['info']
+    SetGroup: StateType['group']
   }
 }
 
-const stateModel = {
+const stateModel: StateType = {
   im: null,
   info: {
+    id: null,
     token: '',
     avatar: '',
     username: '',
@@ -47,12 +54,16 @@ const stateModel = {
     email: null,
     sex: false,
   },
+  group: {
+    my: [],
+    other: [],
+  },
 }
 
 const modelNamespace = 'user'
 const modelCore: Store.Model<ModelType> = {
   namespace: modelNamespace,
-  state: _.cloneDeep(stateModel),
+  state: _.cloneDeep(stateModel) as StateType,
   effects: {
     *initUserinfo({}, { call, put }) {
       const userinfo: StateType['info'] = yield call(async () => {
@@ -67,7 +78,28 @@ const modelCore: Store.Model<ModelType> = {
             token: getStorageSync(StorageUserJWTKey),
           },
         })
+        yield put.resolve({
+          type: 'initUserGroup',
+          payload: {},
+        })
       }
+    },
+    *initUserGroup({}, { call, put }) {
+      const userGroup: StateType['group'] = yield call(async () => {
+        try {
+          const result = await apiErrorListener(APIGetUserPlanGroupList)
+          return {
+            my: result.data!.myGroup,
+            other: result.data!.otherGroup,
+          } as StateType['group']
+        } catch (error) {
+          return {
+            my: [],
+            other: [],
+          } as StateType['group']
+        }
+      })
+      yield put({ type: 'SetGroup', payload: userGroup })
     },
     *login({ payload }, { call, put }) {
       const { username, password } = payload
@@ -80,6 +112,7 @@ const modelCore: Store.Model<ModelType> = {
         Taro.setStorageSync(StorageUserJWTKey, token)
         yield put({ type: 'SetUserinfo', payload: { ...loginResult.data! } })
         yield put.resolve({ type: 'connectSocket', payload: { token } })
+        yield put.resolve({ type: 'initUserinfo', payload: {} })
         setTimeout(() => {
           envRun()
             .WEB(() => Taro.navigateTo({ url: '/pages/me/index' }))
@@ -108,7 +141,7 @@ const modelCore: Store.Model<ModelType> = {
       const im = new AppSocket(token)
       const connectResult = yield call(async () => await im.initConnect())
       if (connectResult) {
-        yield put({ type: 'SetIM', payload: { im } })
+        yield put({ type: 'SetIM', payload: im })
       }
     },
     *logout({}, { put, select }) {
@@ -127,10 +160,13 @@ const modelCore: Store.Model<ModelType> = {
   },
   reducers: {
     SetIM(state, { payload }) {
-      return { ...state, ...payload }
+      return { ...state, im: payload }
     },
     SetUserinfo(state, { payload }) {
-      return { ...state, ...payload }
+      return { ...state, info: payload }
+    },
+    SetGroup(state, { payload }) {
+      return { ...state, group: payload }
     },
   },
 }

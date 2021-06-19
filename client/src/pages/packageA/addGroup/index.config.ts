@@ -1,3 +1,6 @@
 export default {
   navigationBarTitleText: '添加小组',
-} as Taro.CommonPageConfig
+  usingComponents: {
+    'vant-empty': '@vant/empty/index',
+  },
+} as Taro.Config

@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import { View, Text, Button } from '@tarojs/components'
 import './index.scss'
 import Taro from '@tarojs/taro'
@@ -15,10 +15,10 @@ interface LoginDispatch {
 
 const Login: FC<LoginProps & LoginDispatch> = props => {
   const { userLogin, userReg } = props
-  const loginForm = {
+  const [loginForm, setLoginForm] = useState({
     username: '',
     password: '',
-  }
+  })
 
   return (
     <View className='index'>
@@ -27,23 +27,23 @@ const Login: FC<LoginProps & LoginDispatch> = props => {
         title='用户名'
         type='text'
         placeholder='请输入登陆用户名'
-        onChange={(val: string) => formChange('username', val)}
+        onChange={(val: string) => onFormChange('username', val)}
       />
       <AtInput
         name='password'
         title='密码'
         type='password'
         placeholder='请输入密码'
-        onChange={(val: string) => formChange('password', val)}
+        onChange={(val: string) => onFormChange('password', val)}
       />
       <View className='at-row' style='margin-top: 20px;'>
         <View className='at-col'>
-          <AtButton circle type='primary' onClick={() => submitForm('login')}>
+          <AtButton circle type='primary' onClick={() => onSubmitForm('login')}>
             登陆
           </AtButton>
         </View>
         <View className='at-col'>
-          <AtButton circle type='primary' onClick={() => submitForm('reg')}>
+          <AtButton circle type='primary' onClick={() => onSubmitForm('reg')}>
             注册
           </AtButton>
         </View>
@@ -51,11 +51,11 @@ const Login: FC<LoginProps & LoginDispatch> = props => {
     </View>
   )
 
-  function formChange(changeKey: keyof typeof loginForm, val: string) {
-    loginForm[changeKey] = val
+  function onFormChange(changeKey: keyof typeof loginForm, val: string) {
+    setLoginForm(state => ({ ...state, [changeKey]: val }))
   }
 
-  function submitForm(action: 'reg' | 'login') {
+  function onSubmitForm(action: 'reg' | 'login') {
     const { username, password } = loginForm
     if (username && password) {
       if (action === 'reg') reg()

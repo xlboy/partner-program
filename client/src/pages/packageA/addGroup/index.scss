@@ -10,7 +10,44 @@
     position: relative;
     &__not {
       position: absolute;
-      top: 41%
+      top: 41%;
+    }
+  }
+  .group-item {
+    width: 95%;
+    margin-left: 2.5%;
+    margin-bottom: 3px;
+    overflow: hidden;
+    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
+    border-radius: 9px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    &__avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 30px;
+    }
+    &__info {
+      flex: 1;
+      height: 100%;
+      padding-left: 15px;
+      display: flex;
+      flex-direction: column;
+      font-size: 25px;
+      .title {
+        font-size: 35px;
+        margin-top: 5px;
+        color: #333;
+        display: flex;
+        align-items: center;
+      }
+      .introduce {
+        font-size: 30px;
+        color: #757575;
+      }
     }
   }
 }

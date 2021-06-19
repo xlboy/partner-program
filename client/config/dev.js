@@ -10,6 +10,5 @@ module.exports = {
   },
   alias: {
     '@': path.resolve(__dirname, '..', 'src/'),
-    'appConfig': path.resolve(__dirname, '..', 'src/app.config.js')
   }
 };

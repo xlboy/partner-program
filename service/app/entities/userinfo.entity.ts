@@ -51,9 +51,6 @@ export default class Userinfo extends BaseEntity {
   @OneToMany(() => PlanInfo, planInfo => planInfo.userinfo)
   planInfo: PlanInfo[];
 
-  @ManyToMany(() => PlanGroup, planGroup => planGroup.userinfo)
+  @ManyToMany(() => PlanGroup, planGroup => planGroup.userinfos)
   planGroup: PlanGroup[];
-
-  // @OneToMany(() => PlanGroup, planGroup => planGroup.founder, { cascade: true })
-  // planGroupFounder: PlanGroup[];
 }

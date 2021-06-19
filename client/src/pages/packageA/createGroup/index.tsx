@@ -2,7 +2,7 @@ import { FC, useState } from 'react'
 import { View } from '@tarojs/components'
 import './index.scss'
 import Taro from '@tarojs/taro'
-import { AtButton, AtInput, AtTextarea } from 'taro-ui'
+import { AtButton, AtInput, AtMessage, AtTextarea } from 'taro-ui'
 import { APICreatePlantGroup } from '@/apis/modules/plantGroup'
 
 interface CreateGroupForm {
@@ -18,6 +18,7 @@ const CreateGroup: FC = () => {
 
   return (
     <View className='index'>
+      <AtMessage />
       <AtInput
         name='groupName'
         title='组名'
@@ -42,11 +43,14 @@ const CreateGroup: FC = () => {
 
   async function onSubmitForm(): Promise<void> {
     await APICreatePlantGroup(form)
+    console.log('Taro', Taro)
     Taro.atMessage({
       message: '创建成功',
       type: 'success',
     })
-    Taro.navigateBack()
+    setTimeout(() => {
+      Taro.navigateBack()
+    }, 500)
   }
 
   function onFormChange(key: keyof CreateGroupForm, val: string): void {
