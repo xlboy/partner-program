@@ -1,3 +1,5 @@
+import { APIiUserinfoResult } from "./user";
+
 export interface APIPlanGroup {
   id: number
   introduce: string
@@ -5,7 +7,7 @@ export interface APIPlanGroup {
   isNotify: boolean
   groupNum: number
   avatar: string
-  userinfos: number[]
+  userinfos: APIiUserinfoResult[]
 }
 export interface APIUserPlanGroupList {
   myGroup: APIPlanGroup[]

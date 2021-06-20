@@ -63,7 +63,10 @@ export default class PlanGroupService {
   }
 
   async findGroupId(groupId: number): Promise<PlanGroup | false> {
-    const findResult = await this.repository.find({ id: groupId });
+    const findResult = await this.repository.find({
+      relations: ["userinfos", "founder"],
+      where: { id: groupId },
+    });
     return findResult[0] ?? false;
   }
 

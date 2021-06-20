@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import { APIUserPlanGroupList } from '../typings/planGroup'
+import { APIPlanGroup, APIUserPlanGroupList } from '../typings/planGroup'
 import { APIFormat } from '../typings/public'
 import { APISearchPlantGroup as IAPISearchPlantGroup } from '../typings/planGroup'
 export const APIGetUserPlanGroupList = () =>
@@ -20,4 +20,11 @@ export const APICreatePlantGroup = (params: { introduce: string; groupName: stri
     method: 'POST',
     data: params,
     url: '/plan-group/create',
+  })
+
+export const APIFindPlantGroupId = (id: string) =>
+  request<APIFormat<APIPlanGroup>>({
+    method: 'GET',
+    data: { id },
+    url: '/plan-group/findPlantGroupId',
   })

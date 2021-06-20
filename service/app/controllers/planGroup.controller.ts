@@ -103,4 +103,13 @@ export class PlanGroupController {
 
     return resultFormat.success({ msg: "ok", data: findResult });
   }
+
+  @Get("/plan-group/findPlantGroupId")
+  @UseBefore(validationInterceptor("USER_AUTHORIZE"))
+  async getPlantGroupId(@QueryParam("id") id: string) {
+    return resultFormat.success({
+      msg: "ok",
+      data: await this.planGroupService.findGroupId(+id),
+    });
+  }
 }

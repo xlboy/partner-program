@@ -1,17 +1,17 @@
 import { FC, useMemo, useState } from 'react'
-import { Image, Text, View } from '@tarojs/components'
+import { Image, ITouchEvent, Text, View } from '@tarojs/components'
 import './index.scss'
 import Taro from '@tarojs/taro'
 import { AtSearchBar, AtTag } from 'taro-ui'
 import { APISearchPlantGroup } from '@/apis/modules/plantGroup'
 import { APIPlanGroup } from '@/apis/typings/planGroup'
 import { connect } from 'react-redux'
+import getAppConfig from '@/utils/getAppConfig'
 interface AddGroupState {
   searchVal: string
   hasSearch: boolean
   searchResult: APIPlanGroup[]
 }
-type GroupItem = Pick<APIPlanGroup, 'avatar' | 'userinfos' | 'groupName' | 'introduce'>
 interface AddGroupStoreProps {
   currentUserId: number
 }
@@ -32,26 +32,30 @@ const AddGroup: FC<AddGroupStoreProps> = props => {
     <View className='index'>
       <AtSearchBar
         maxLength={12}
-        placeholder='组昵称/组号'
+        placeholder='小组昵称/小组号'
         value={state.searchVal}
         onChange={searchValChange.bind(null)}
         onActionClick={searchBtnClick}
       />
       <View className='search-result'>
-        {isNotSearchResult && <vant-empty image='search' description='没有搜索到您想要的...' />}
-        {!isNotSearchResult && state.searchResult.map(item => <GroupItem {...item} />)}
+        {isNotSearchResult ? (
+          <vant-empty image='search' description='没有搜索到您想要的...' />
+        ) : (
+          state.searchResult.map(item => <GroupItem {...item} />)
+        )}
       </View>
     </View>
   )
 
-  function GroupItem(props: GroupItem): JSX.Element {
+  function GroupItem(props: APIPlanGroup): JSX.Element {
     const { avatar, groupName, introduce, userinfos } = props
-
-    const applyToJoin = () => {}
-
+    const isUserInGroup = useMemo(
+      () => userinfos.some(({ id }) => id === currentUserId),
+      [currentUserId]
+    )
     return (
       <>
-        <View className='group-item'>
+        <View className='group-item' onClick={() => toGroupInfoPage(props)}>
           <Image src={avatar} className='group-item__avatar' />
           <View className='group-item__info'>
             <View className='title'>
@@ -62,17 +66,21 @@ const AddGroup: FC<AddGroupStoreProps> = props => {
             </View>
             <Text className='introduce'>{introduce}</Text>
           </View>
-          <View>
-            <AtTag active onClick={applyToJoin}>
-              {userinfos.includes(currentUserId) && '进入'}
-              {!userinfos.includes(currentUserId) && '申请'}
-            </AtTag>
+          <View onClick={applyToJoin}>
+            <AtTag active>{isUserInGroup ? '进入' : '申请'}</AtTag>
           </View>
         </View>
       </>
     )
   }
 
+  function applyToJoin(ev: ITouchEvent): void {
+    ev.stopPropagation()
+  }
+
+  function toGroupInfoPage(groupInfo: APIPlanGroup): void {
+    Taro.navigateTo({ url: `${getAppConfig().AllPage.GroupInfo}?id=${groupInfo.id}` })
+  }
   function searchValChange(value: string): void {
     setState(state => ({ ...state, searchVal: value }))
   }

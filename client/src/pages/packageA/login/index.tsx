@@ -26,6 +26,7 @@ const Login: FC<LoginProps & LoginDispatch> = props => {
         name='username'
         title='用户名'
         type='text'
+        value={loginForm.username}
         placeholder='请输入登陆用户名'
         onChange={(val: string) => onFormChange('username', val)}
       />
@@ -33,6 +34,7 @@ const Login: FC<LoginProps & LoginDispatch> = props => {
         name='password'
         title='密码'
         type='password'
+        value={loginForm.password}
         placeholder='请输入密码'
         onChange={(val: string) => onFormChange('password', val)}
       />
@@ -51,24 +53,24 @@ const Login: FC<LoginProps & LoginDispatch> = props => {
     </View>
   )
 
-  function onFormChange(changeKey: keyof typeof loginForm, val: string) {
+  function onFormChange(changeKey: keyof typeof loginForm, val: string): void {
     setLoginForm(state => ({ ...state, [changeKey]: val }))
   }
 
-  function onSubmitForm(action: 'reg' | 'login') {
+  function onSubmitForm(action: 'reg' | 'login'): void {
     const { username, password } = loginForm
     if (username && password) {
       if (action === 'reg') reg()
       else login()
     } else {
-      return Taro.showToast({ title: '账号或密码不可为空', icon: 'none' })
+      Taro.showToast({ title: '账号或密码不可为空', icon: 'none' })
     }
 
-    async function login() {
+    async function login(): Promise<void> {
       await userLogin(loginForm)
     }
 
-    async function reg() {
+    async function reg(): Promise<void> {
       await userReg({ ...loginForm, nickname: `加油吧少年${Math.floor(Math.random() * 500000)}` })
     }
   }
